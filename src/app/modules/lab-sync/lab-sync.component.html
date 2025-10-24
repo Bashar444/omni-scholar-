@@ -1,0 +1,766 @@
+<div class="lab-sync-container">
+  <!-- Header with Team Info -->
+  <div class="team-header">
+    @if (currentTeam(); as team) {
+      <div class="team-info">
+        <i class="pi pi-users team-icon"></i>
+        <div>
+          <h2>{{ team.name }}</h2>
+          <p>{{ team.description }}</p>
+        </div>
+      </div>
+      <div class="team-stats">
+        <div class="stat">
+          <i class="pi pi-users"></i>
+          <span>{{ team.memberCount }} members</span>
+        </div>
+        <div class="stat">
+          <i class="pi pi-circle-fill"></i>
+          <span>{{ onlineMembers().length }} online</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Global Search Bar -->
+  <div class="global-search">
+    <span class="p-input-icon-left p-input-icon-right search-field">
+      <i class="pi pi-search"></i>
+      <input pInputText
+             [(ngModel)]="searchQuery" 
+             (ngModelChange)="onSearchChange()"
+             placeholder="Search papers, tasks, activities...">
+      @if (searchQuery) {
+        <i class="pi pi-times cursor-pointer" (click)="clearSearch()"></i>
+      }
+    </span>
+    
+    <!-- Export/Import Buttons -->
+    <div class="action-buttons">
+      <p-button 
+        (onClick)="exportData()" 
+        [disabled]="papers().length === 0 && tasks().length === 0"
+        icon="pi pi-download" 
+        label="Export Team Data">
+      </p-button>
+      <p-button 
+        (onClick)="fileInput.click()" 
+        icon="pi pi-upload" 
+        severity="secondary"
+        label="Import Team Data">
+      </p-button>
+      <input #fileInput type="file" accept=".json" style="display: none" (change)="importData($event)">
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <p-tabView>
+    <!-- Dashboard Tab -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-th-large mr-2"></i>
+        <span>Dashboard</span>
+      </ng-template>
+
+      <div class="dashboard-content">
+        <!-- Analytics Cards -->
+        @if (analytics(); as stats) {
+          <div class="analytics-grid">
+            <p-card styleClass="stat-card">
+              <div class="stat-value">{{ stats.totalPapers }}</div>
+              <div class="stat-label">Total Papers</div>
+              <i class="pi pi-file"></i>
+            </p-card>
+
+            <p-card styleClass="stat-card">
+              <div class="stat-value">{{ stats.papersReadThisWeek }}</div>
+              <div class="stat-label">Read This Week</div>
+              <i class="pi pi-book"></i>
+            </p-card>
+
+            <p-card styleClass="stat-card">
+              <div class="stat-value">{{ stats.totalComments }}</div>
+              <div class="stat-label">Total Comments</div>
+              <i class="pi pi-comment"></i>
+            </p-card>
+
+            <p-card styleClass="stat-card">
+              <div class="stat-value">{{ stats.tasksCompleted }}/{{ stats.totalTasks }}</div>
+              <div class="stat-label">Tasks Completed</div>
+              <i class="pi pi-check-circle"></i>
+            </p-card>
+
+            <p-card styleClass="stat-card">
+              <div class="stat-value">{{ stats.activeMembers }}</div>
+              <div class="stat-label">Active Members</div>
+              <i class="pi pi-users"></i>
+            </p-card>
+
+            <p-card styleClass="stat-card">
+              <div class="stat-value">🏆</div>
+              <div class="stat-label">{{ stats.mostActiveMember }}</div>
+              <i class="pi pi-star-fill"></i>
+            </p-card>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-row">
+            <p-card class="chart-card">
+              <ng-template pTemplate="header">
+                <h3 class="text-xl font-bold m-0">Papers by Status</h3>
+              </ng-template>
+              <div class="status-bars">
+                @for (status of paperStatuses; track status.value) {
+                  <div class="status-bar">
+                    <div class="status-info">
+                      <i class="pi pi-{{ status.icon }}" [style.color]="status.color"></i>
+                      <span>{{ status.label }}</span>
+                    </div>
+                    <div class="bar-container">
+                      <div class="bar-fill" [style.width.%]="getStatusCount(stats, status.value)" [style.background]="status.color"></div>
+                      <span class="bar-count">{{ getStatusCountValue(stats, status.value) }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </p-card>
+
+            <p-card class="chart-card">
+              <ng-template pTemplate="header">
+                <h3 class="text-xl font-bold m-0">Tasks Overview</h3>
+              </ng-template>
+              <div class="task-breakdown">
+                <div class="task-stat">
+                  <span class="task-label">To Do</span>
+                  <span class="task-count">{{ stats.tasksByStatus.todo }}</span>
+                </div>
+                <div class="task-stat">
+                  <span class="task-label">In Progress</span>
+                  <span class="task-count">{{ stats.tasksByStatus.inProgress }}</span>
+                </div>
+                <div class="task-stat">
+                  <span class="task-label">Review</span>
+                  <span class="task-count">{{ stats.tasksByStatus.review }}</span>
+                </div>
+                <div class="task-stat completed">
+                  <span class="task-label">Done</span>
+                  <span class="task-count">{{ stats.tasksByStatus.done }}</span>
+                </div>
+              </div>
+            </p-card>
+          </div>
+        }
+
+        <!-- Recent Activity -->
+        <p-card class="activity-card">
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-history text-xl"></i>
+              <div>
+                <h3 class="text-xl font-bold m-0">Recent Activity</h3>
+                <p class="text-sm text-500 m-0">Team updates from the last 7 days</p>
+              </div>
+            </div>
+          </ng-template>
+          <div class="activity-feed">
+            @for (activity of filteredActivities(); track activity.id) {
+              <div class="activity-item">
+                <div class="activity-icon" [style.background]="activity.color">
+                  <i class="pi pi-{{ activity.icon }}"></i>
+                </div>
+                <div class="activity-details">
+                  <div class="activity-text">
+                    <strong>{{ activity.userName }}</strong> {{ activity.description }}
+                  </div>
+                  <div class="activity-time">{{ formatTime(activity.timestamp) }}</div>
+                </div>
+              </div>
+            } @empty {
+              <p class="empty-state">No recent activity</p>
+            }
+          </div>
+        </p-card>
+      </div>
+    </p-tabPanel>
+
+    <!-- Papers Tab -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-2">
+          <i class="pi pi-file"></i>
+          <span>Shared Papers</span>
+          <p-badge [value]="papers().length.toString()"></p-badge>
+        </div>
+      </ng-template>
+
+      <div class="papers-content">
+        <!-- Add Paper Button -->
+        <div class="section-header">
+          <h3>Team Paper Library</h3>
+          <p-button 
+            (onClick)="showAddPaperForm = !showAddPaperForm" 
+            icon="pi pi-plus" 
+            label="Add Paper">
+          </p-button>
+        </div>
+
+        <!-- Add Paper Form -->
+        @if (showAddPaperForm) {
+          <p-card class="add-form">
+            <h4>Add New Paper</h4>
+            <div class="flex flex-column gap-3">
+              <div class="p-float-label">
+                <input 
+                  id="title" 
+                  pInputText 
+                  [(ngModel)]="newPaperForm.title" 
+                  placeholder="Enter paper title"
+                  class="w-full">
+                <label for="title">Paper Title</label>
+              </div>
+
+              <div class="p-float-label">
+                <input 
+                  id="authors" 
+                  pInputText 
+                  [(ngModel)]="newPaperForm.authors" 
+                  placeholder="Smith, J., Doe, M."
+                  class="w-full">
+                <label for="authors">Authors</label>
+              </div>
+
+              <div class="p-float-label">
+                <p-inputNumber 
+                  id="year" 
+                  [(ngModel)]="newPaperForm.year" 
+                  [min]="1900" 
+                  [max]="2100">
+                </p-inputNumber>
+                <label for="year">Year</label>
+              </div>
+
+              <div class="p-float-label">
+                <input 
+                  id="tags" 
+                  pInputText 
+                  [(ngModel)]="newPaperForm.tags" 
+                  placeholder="AI, Healthcare, Deep Learning"
+                  class="w-full">
+                <label for="tags">Tags (comma-separated)</label>
+              </div>
+
+              <div class="flex justify-content-end gap-2">
+                <p-button 
+                  (onClick)="showAddPaperForm = false" 
+                  label="Cancel"
+                  severity="secondary">
+                </p-button>
+                <p-button 
+                  (onClick)="addPaper()" 
+                  label="Add Paper">
+                </p-button>
+              </div>
+            </div>
+          </p-card>
+        }
+
+        <!-- Papers List -->
+        <div class="papers-grid">
+          @for (paper of filteredPapers(); track paper.id) {
+            <p-card 
+              styleClass="paper-card cursor-pointer" 
+              [ngClass]="{'selected': selectedPaper()?.id === paper.id}" 
+              (click)="selectPaper(paper)">
+              <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-3 px-3 pt-3">
+                  <div class="paper-status-badge" [style.background]="getStatusConfig(paper.status).color">
+                    <i class="pi pi-{{ getStatusConfig(paper.status).icon }}"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h3 class="text-xl m-0">{{ paper.title }}</h3>
+                    <p class="text-sm text-500 m-0">{{ paper.authors }} ({{ paper.year }})</p>
+                  </div>
+                  <p-menu #paperMenu [popup]="true" [model]="getPaperMenuItems(paper)"></p-menu>
+                  <p-button 
+                    icon="pi pi-ellipsis-v" 
+                    (onClick)="$event.stopPropagation(); paperMenu.toggle($event)" 
+                    severity="secondary" 
+                    [text]="true">
+                  </p-button>
+                </div>
+              </ng-template>
+
+              <div class="paper-meta">
+                <span class="meta-item">
+                  <i class="pi pi-user"></i>
+                  Added by {{ paper.addedBy }}
+                </span>
+                <span class="meta-item">
+                  <i class="pi pi-calendar"></i>
+                  {{ formatDate(paper.addedAt) }}
+                </span>
+              </div>
+
+              @if (paper.tags.length > 0) {
+                <div class="flex flex-wrap gap-2 mt-3">
+                  @for (tag of paper.tags; track tag) {
+                    <p-chip>{{ tag }}</p-chip>
+                  }
+                </div>
+              }
+
+              <ng-template pTemplate="footer">
+                <p-button 
+                  (onClick)="selectPaper(paper); $event.stopPropagation()" 
+                  icon="pi pi-comment" 
+                  [label]="'Comments' + (paper.commentsCount ? ' (' + paper.commentsCount + ')' : '')"
+                  [text]="true">
+                </p-button>
+              </ng-template>
+            </p-card>
+          } @empty {
+            <div class="empty-state">
+              <i class="pi pi-file text-4xl"></i>
+              <p>No papers yet. Add your first paper to get started!</p>
+            </div>
+          }
+        </div>
+
+        <!-- Comments Panel -->
+        @if (selectedPaper(); as paper) {
+          <p-card class="comments-panel">
+            <ng-template pTemplate="header">
+              <div class="flex align-items-center gap-3">
+                <i class="pi pi-comments text-xl"></i>
+                <h3 class="text-xl m-0 flex-grow-1">Discussion: {{ paper.title }}</h3>
+                <p-button 
+                  icon="pi pi-times" 
+                  (onClick)="selectedPaper.set(null)" 
+                  severity="secondary" 
+                  [text]="true">
+                </p-button>
+              </div>
+            </ng-template>
+
+            <div class="comments-list">
+              @for (comment of paperComments(); track comment.id) {
+                <div class="comment">
+                  <div class="comment-avatar">
+                    <i class="pi pi-user text-xl"></i>
+                  </div>
+                  <div class="comment-body">
+                    <div class="comment-header">
+                      <strong>{{ comment.authorName }}</strong>
+                      <span class="comment-time">{{ formatTime(comment.createdAt) }}</span>
+                    </div>
+                    <div class="comment-text">{{ comment.content }}</div>
+                    <div class="comment-actions">
+                      <p-button 
+                        (onClick)="addReaction(comment.id, '👍')" 
+                        icon="pi pi-thumbs-up" 
+                        [label]="comment.reactions.length > 0 ? comment.reactions.length.toString() : ''"
+                        [text]="true">
+                      </p-button>
+                    </div>
+                  </div>
+                </div>
+              } @empty {
+                <p class="empty-state-small">No comments yet. Be the first to comment!</p>
+              }
+            </div>
+
+            <div class="comment-input">
+              <div class="p-float-label mb-3">
+                <textarea 
+                  pInputTextarea 
+                  [(ngModel)]="newCommentText" 
+                  rows="2"
+                  class="w-full">
+                </textarea>
+                <label>Add a comment...</label>
+              </div>
+              <p-button 
+                (onClick)="addComment()" 
+                icon="pi pi-send" 
+                [disabled]="!newCommentText.trim()"
+                label="Comment">
+              </p-button>
+            </div>
+          </p-card>
+        }
+      </div>
+    </p-tabPanel>
+
+    <!-- Tasks Tab -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center">
+          <i class="pi pi-check-square mr-2"></i>
+          <span>Tasks</span>
+          <p-badge [value]="todayTasks().length.toString()" severity="info" class="ml-2"></p-badge>
+        </div>
+      </ng-template>
+
+      <div class="tasks-content">
+        <!-- Add Task Button -->
+        <div class="section-header">
+          <h3>Team Tasks</h3>
+          <p-button icon="pi pi-plus" 
+                    label="Create Task"
+                    severity="primary" 
+                    (onClick)="showAddTaskForm = !showAddTaskForm">
+          </p-button>
+        </div>
+
+        <!-- Add Task Form -->
+        @if (showAddTaskForm) {
+          <p-card styleClass="add-form">
+            <div class="p-fluid">
+              <h4>Create New Task</h4>
+              
+              <div class="p-field mb-3">
+                <span class="p-float-label">
+                  <input pInputText id="taskTitle"
+                         [(ngModel)]="newTaskForm.title" 
+                         placeholder="Enter task title">
+                  <label for="taskTitle">Task Title</label>
+                </span>
+              </div>
+
+              <div class="p-field mb-3">
+                <span class="p-float-label">
+                  <textarea pInputTextarea id="taskDescription"
+                           [(ngModel)]="newTaskForm.description" 
+                           rows="3"></textarea>
+                  <label for="taskDescription">Description</label>
+                </span>
+              </div>
+
+              <div class="p-field mb-3">
+                <span class="p-float-label">
+                  <p-multiSelect id="assignees"
+                               [(ngModel)]="newTaskForm.assignedTo"
+                               [options]="membersOptions()"
+                               optionLabel="label"
+                               optionValue="value"
+                               [style]="{'width':'100%'}"
+                               display="chip">
+                  </p-multiSelect>
+                  <label for="assignees">Assign To</label>
+                </span>
+              </div>
+
+              <div class="p-field mb-3">
+                <span class="p-float-label">
+                  <p-dropdown id="priority"
+                             [(ngModel)]="newTaskForm.priority"
+                             [options]="taskPriorities"
+                             optionLabel="label"
+                             optionValue="value"
+                             [style]="{'width':'100%'}"
+                             placeholder="Select Priority">
+                  </p-dropdown>
+                  <label for="priority">Priority</label>
+                </span>
+              </div>
+
+              <div class="p-field mb-3">
+                <span class="p-float-label">
+                  <p-calendar id="dueDate"
+                            [(ngModel)]="newTaskForm.dueDate"
+                            [showIcon]="true"
+                            [style]="{'width':'100%'}"
+                            dateFormat="yy-mm-dd">
+                  </p-calendar>
+                  <label for="dueDate">Due Date</label>
+                </span>
+              </div>
+
+              <div class="p-d-flex p-jc-end p-gap-2">
+                <p-button label="Cancel" 
+                         severity="secondary"
+                         styleClass="p-button-text" 
+                         (onClick)="showAddTaskForm = false">
+                </p-button>
+                <p-button label="Create Task" 
+                         severity="primary"
+                         (onClick)="addTask()">
+                </p-button>
+              </div>
+            </div>
+          </p-card>
+        }
+
+        <!-- Tasks Kanban Board -->
+        <div class="kanban-board">
+          <!-- Loading Skeletons -->
+          @if (isLoading()) {
+            <div class="kanban-column">
+              <div class="column-header todo">
+                <i class="pi pi-inbox"></i>
+                <h4>To Do</h4>
+              </div>
+              <div class="column-content">
+                <app-task-item-skeleton *ngFor="let item of [1,2,3]"></app-task-item-skeleton>
+              </div>
+            </div>
+            <div class="kanban-column">
+              <div class="column-header in-progress">
+                <i class="pi pi-clock"></i>
+                <h4>In Progress</h4>
+              </div>
+              <div class="column-content">
+                <app-task-item-skeleton *ngFor="let item of [1,2]"></app-task-item-skeleton>
+              </div>
+            </div>
+            <div class="kanban-column">
+              <div class="column-header review">
+                <i class="pi pi-comments"></i>
+                <h4>Review</h4>
+              </div>
+              <div class="column-content">
+                <app-task-item-skeleton></app-task-item-skeleton>
+              </div>
+            </div>
+          }
+          
+          <!-- To Do Column -->
+          @if (!isLoading()) {
+          <div class="kanban-column">
+            <div class="column-header todo">
+              <i class="pi pi-inbox"></i>
+              <h4>To Do</h4>
+              <p-badge [value]="todoTasks().length.toString()" severity="info"></p-badge>
+            </div>
+            <div class="column-content">
+              @for (task of todoTasks(); track task.id) {
+                <p-card class="task-card">
+                  <ng-template pTemplate="header">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                      <div class="p-d-flex p-ai-center">
+                        <div class="priority-indicator" [style.background]="getPriorityConfig(task.priority).color"></div>
+                        <h3 class="m-0">{{ task.title }}</h3>
+                      </div>
+                      <p-menu #taskMenu [popup]="true" [model]="getTaskMenu(task)"></p-menu>
+                      <p-button icon="pi pi-ellipsis-v" 
+                               (click)="taskMenu.toggle($event)"
+                               styleClass="p-button-text">
+                      </p-button>
+                    </div>
+                  </ng-template>
+
+                  <div class="task-content">
+                    <p>{{ task.description }}</p>
+                    @if (task.dueDate) {
+                      <div class="task-meta" [ngClass]="{'overdue': isOverdue(task.dueDate)}">
+                        <i class="pi pi-calendar"></i>
+                        {{ formatDate(task.dueDate) }}
+                      </div>
+                    }
+                    @if (task.assignedTo.length > 0) {
+                      <div class="task-assignees">
+                        @for (assigneeId of task.assignedTo.slice(0, 3); track assigneeId) {
+                          <p-chip>{{ getMemberName(assigneeId) }}</p-chip>
+                        }
+                      </div>
+                    }
+                  </div>
+                </p-card>
+              } @empty {
+                <p class="empty-column">No tasks</p>
+              }
+            </div>
+          </div>
+
+          <!-- In Progress Column -->
+          <div class="kanban-column">
+            <div class="column-header in-progress">
+              <i class="pi pi-clock"></i>
+              <h4>In Progress</h4>
+              <p-badge [value]="inProgressTasks().length.toString()" severity="warning"></p-badge>
+            </div>
+            <div class="column-content">
+              @for (task of inProgressTasks(); track task.id) {
+                <p-card class="task-card">
+                  <ng-template pTemplate="header">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                      <div class="p-d-flex p-ai-center">
+                        <div class="priority-indicator" [style.background]="getPriorityConfig(task.priority).color"></div>
+                        <h3 class="m-0">{{ task.title }}</h3>
+                      </div>
+                      <p-menu #taskMenu [popup]="true" [model]="getTaskMenu(task)"></p-menu>
+                      <p-button icon="pi pi-ellipsis-v" 
+                               (click)="taskMenu.toggle($event)"
+                               styleClass="p-button-text">
+                      </p-button>
+                    </div>
+                  </ng-template>
+
+                  <div class="task-content">
+                    <p>{{ task.description }}</p>
+                    @if (task.dueDate) {
+                      <div class="task-meta" [ngClass]="{'overdue': isOverdue(task.dueDate)}">
+                        <i class="pi pi-calendar"></i>
+                        {{ formatDate(task.dueDate) }}
+                      </div>
+                    }
+                    @if (task.assignedTo.length > 0) {
+                      <div class="task-assignees">
+                        @for (assigneeId of task.assignedTo.slice(0, 3); track assigneeId) {
+                          <p-chip>{{ getMemberName(assigneeId) }}</p-chip>
+                        }
+                      </div>
+                    }
+                  </div>
+                </p-card>
+              } @empty {
+                <p class="empty-column">No tasks</p>
+              }
+            </div>
+          </div>
+
+          <!-- Review Column -->
+          <div class="kanban-column">
+            <div class="column-header review">
+              <i class="pi pi-comments"></i>
+              <h4>Review</h4>
+              <span class="count">{{ reviewTasks().length }}</span>
+            </div>
+            <div class="column-content">
+              @for (task of reviewTasks(); track task.id) {
+                <p-card class="task-card">
+                  <ng-template pTemplate="header">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                      <div class="p-d-flex p-ai-center">
+                        <div class="priority-indicator" [style.background]="getPriorityConfig(task.priority).color"></div>
+                        <h3 class="m-0">{{ task.title }}</h3>
+                      </div>
+                      <div class="action-buttons">
+                        <p-button icon="pi pi-check-circle" class="p-button-text" (onClick)="updateTaskStatus(task.id, 'done')"></p-button>
+                        <p-button icon="pi pi-undo" class="p-button-text" (onClick)="updateTaskStatus(task.id, 'in-progress')"></p-button>
+                        <p-button icon="pi pi-trash" class="p-button-text p-button-danger" (onClick)="deleteTask(task.id)"></p-button>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <div>
+                    <p>{{ task.description }}</p>
+                    @if (task.dueDate) {
+                      <div class="task-meta" [class.overdue]="isOverdue(task.dueDate)">
+                        <i class="pi pi-calendar"></i>
+                        {{ formatDate(task.dueDate) }}
+                      </div>
+                    }
+                    @if (task.assignedTo.length > 0) {
+                      <div class="task-assignees">
+                        @for (assigneeId of task.assignedTo.slice(0, 3); track assigneeId) {
+                          <p-chip>{{ getMemberName(assigneeId) }}</p-chip>
+                        }
+                      </div>
+                    }
+                  </div>
+                </p-card>
+              } @empty {
+                <p class="empty-column">No tasks</p>
+              }
+            </div>
+          </div>
+
+          <!-- Done Column -->
+          <div class="kanban-column">
+            <div class="column-header done">
+              <i class="pi pi-check-circle"></i>
+              <h4>Done</h4>
+              <span class="count">{{ doneTasks().length }}</span>
+            </div>
+            <div class="column-content">
+              @for (task of doneTasks(); track task.id) {
+                <p-card class="task-card completed">
+                  <ng-template pTemplate="header">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                      <div class="p-d-flex p-ai-center">
+                        <div class="priority-indicator" [style.background]="getPriorityConfig(task.priority).color"></div>
+                        <h3 class="m-0">{{ task.title }}</h3>
+                      </div>
+                      <div class="action-buttons">
+                        <p-button icon="pi pi-undo" class="p-button-text" (onClick)="updateTaskStatus(task.id, 'review')"></p-button>
+                        <p-button icon="pi pi-trash" class="p-button-text p-button-danger" (onClick)="deleteTask(task.id)"></p-button>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <div>
+                    <p>{{ task.description }}</p>
+                    @if (task.dueDate) {
+                      <div class="task-meta">
+                        <i class="pi pi-calendar"></i>
+                        {{ formatDate(task.dueDate) }}
+                      </div>
+                    }
+                    @if (task.assignedTo.length > 0) {
+                      <div class="task-assignees">
+                        @for (assigneeId of task.assignedTo.slice(0, 3); track assigneeId) {
+                          <p-chip>{{ getMemberName(assigneeId) }}</p-chip>
+                        }
+                      </div>
+                    }
+                  </div>
+                </p-card>
+              } @empty {
+                <p class="empty-column">No completed tasks</p>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <!-- Team Tab -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-group" [attr.data-badge]="members().length"></i>
+        Team
+      </ng-template>
+
+      <div class="team-content">
+        <div class="section-header">
+          <h3>Team Members</h3>
+        </div>
+
+          <div class="members-grid">
+          @for (member of members(); track member.id) {
+            <p-card class="member-card">
+              <ng-template pTemplate="header">
+                <div class="member-avatar" [class.online]="member.isOnline">
+                  <i class="pi pi-user"></i>
+                  @if (member.isOnline) {
+                    <span class="online-badge"></span>
+                  }
+                </div>
+                <div class="member-info">
+                  <div class="card-title">{{ member.name }}</div>
+                  <div class="card-subtitle">{{ member.email }}</div>
+                </div>
+              </ng-template>
+              <div class="member-details">
+                <div class="detail-row">
+                  <i class="pi pi-id-badge"></i>
+                  <span>{{ member.role }}</span>
+                </div>
+                <div class="detail-row">
+                  <i class="pi pi-calendar"></i>
+                  <span>Joined {{ formatDate(member.joinedAt) }}</span>
+                </div>
+                <div class="detail-row">
+                  <i class="pi pi-clock"></i>
+                  <span>Active {{ formatTime(member.lastActive) }}</span>
+                </div>
+              </div>
+            </p-card>
+          }
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

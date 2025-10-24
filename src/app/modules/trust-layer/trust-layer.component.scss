@@ -1,0 +1,785 @@
+// ============================================================================
+// TrustLayer Component Styles
+// ============================================================================
+
+.trust-layer-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  
+  // Header Card
+  .header-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin-bottom: 24px;
+    padding: 0;
+    
+    .header-content {
+      padding: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .header-text {
+        h1 {
+          font-size: 32px;
+          font-weight: 600;
+          margin: 0 0 8px 0;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          
+          mat-icon {
+            font-size: 36px;
+            width: 36px;
+            height: 36px;
+          }
+        }
+        
+        p {
+          font-size: 16px;
+          margin: 0;
+          opacity: 0.9;
+        }
+      }
+      
+      button {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        backdrop-filter: blur(10px);
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+  
+  // Statistics Grid
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+    
+    .stat-card {
+      .stat-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        
+        .stat-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+          
+          &.verified {
+            color: #4caf50;
+          }
+          
+          &.pending {
+            color: #ff9800;
+          }
+          
+          &.reviews {
+            color: #2196f3;
+          }
+          
+          &.alerts {
+            color: #f44336;
+          }
+        }
+        
+        .stat-info {
+          .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 4px;
+          }
+          
+          .stat-label {
+            font-size: 14px;
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+  
+  // Content Card
+  .content-card {
+    ::ng-deep .mat-mdc-tab-labels {
+      .mat-mdc-tab {
+        min-width: 160px;
+        
+        .mat-mdc-tab-label-content {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        .tab-count {
+          background-color: #e0e0e0;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        
+        &.mat-mdc-tab-active .tab-count {
+          background-color: #667eea;
+          color: white;
+        }
+      }
+    }
+    
+    .tab-content {
+      padding: 24px;
+      
+      // Toolbar
+      .toolbar {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        
+        .search-field {
+          flex: 1;
+          min-width: 300px;
+        }
+        
+        mat-form-field {
+          min-width: 150px;
+        }
+      }
+      
+      // Loading State
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px;
+        gap: 16px;
+        
+        p {
+          color: #666;
+          font-size: 14px;
+        }
+      }
+      
+      // Empty State
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        
+        mat-icon {
+          font-size: 64px;
+          width: 64px;
+          height: 64px;
+          color: #ccc;
+          margin-bottom: 16px;
+        }
+        
+        h3 {
+          font-size: 20px;
+          margin: 0 0 8px 0;
+          color: #333;
+        }
+        
+        p {
+          color: #666;
+          margin: 0 0 24px 0;
+        }
+      }
+      
+      // Verifications List
+      .verifications-list {
+        display: grid;
+        gap: 16px;
+        
+        .verification-card {
+          .verification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            
+            .verification-title {
+              display: flex;
+              gap: 16px;
+              align-items: flex-start;
+              
+              .entity-icon {
+                font-size: 32px;
+                width: 32px;
+                height: 32px;
+                
+                &.paper {
+                  color: #2196f3;
+                }
+                
+                &.dataset {
+                  color: #4caf50;
+                }
+                
+                &.code {
+                  color: #9c27b0;
+                }
+              }
+              
+              h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 600;
+              }
+              
+              .meta {
+                margin: 4px 0 0 0;
+                font-size: 13px;
+                color: #666;
+              }
+            }
+            
+            .status-chip {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              color: white;
+              font-weight: 500;
+              
+              mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+          
+          .verification-body {
+            .verification-info {
+              background-color: #f5f5f5;
+              padding: 16px;
+              border-radius: 8px;
+              margin-bottom: 16px;
+              
+              .info-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid #e0e0e0;
+                
+                &:last-child {
+                  border-bottom: none;
+                }
+                
+                .label {
+                  font-weight: 500;
+                  color: #666;
+                }
+                
+                .value {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  
+                  &.hash {
+                    font-family: monospace;
+                    font-size: 12px;
+                    color: #667eea;
+                    cursor: pointer;
+                  }
+                  
+                  .inline-icon {
+                    font-size: 18px;
+                    width: 18px;
+                    height: 18px;
+                  }
+                }
+                
+                .integrity-chip {
+                  color: white;
+                  font-weight: 600;
+                  font-size: 12px;
+                }
+              }
+            }
+            
+            .verification-actions {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+          }
+        }
+      }
+      
+      // Peer Reviews List
+      .peer-reviews-list {
+        display: grid;
+        gap: 20px;
+        
+        .peer-review-card {
+          .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            
+            .review-title {
+              display: flex;
+              gap: 16px;
+              flex: 1;
+              
+              mat-icon {
+                font-size: 32px;
+                width: 32px;
+                height: 32px;
+                color: #667eea;
+              }
+              
+              h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 600;
+              }
+              
+              .meta {
+                margin: 4px 0 0 0;
+                font-size: 13px;
+                color: #666;
+              }
+            }
+            
+            .badge-chip {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              color: white;
+              font-weight: 600;
+              text-transform: uppercase;
+              
+              mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+          
+          .review-body {
+            .review-metrics {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+              gap: 16px;
+              margin-bottom: 20px;
+              
+              .metric {
+                background-color: #f5f5f5;
+                padding: 16px;
+                border-radius: 8px;
+                text-align: center;
+                
+                .metric-label {
+                  display: block;
+                  font-size: 12px;
+                  color: #666;
+                  margin-bottom: 4px;
+                }
+                
+                .metric-value {
+                  display: block;
+                  font-size: 20px;
+                  font-weight: 600;
+                  color: #333;
+                }
+              }
+            }
+            
+            .review-findings {
+              margin-bottom: 16px;
+              
+              h4 {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0 0 12px 0;
+              }
+              
+              .finding {
+                background-color: #f9f9f9;
+                padding: 16px;
+                border-radius: 8px;
+                border-left: 4px solid #ccc;
+                margin-bottom: 12px;
+                
+                .finding-header {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  margin-bottom: 8px;
+                  
+                  .severity-chip {
+                    color: white;
+                    font-size: 11px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    height: 24px;
+                  }
+                  
+                  .finding-category {
+                    font-size: 12px;
+                    color: #666;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                  }
+                }
+                
+                h5 {
+                  margin: 0 0 8px 0;
+                  font-size: 15px;
+                  font-weight: 600;
+                }
+                
+                p {
+                  margin: 0;
+                  font-size: 14px;
+                  color: #666;
+                  line-height: 1.5;
+                  
+                  &.suggestion {
+                    margin-top: 8px;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    padding: 8px;
+                    background-color: #fff3cd;
+                    border-radius: 4px;
+                    
+                    mat-icon {
+                      font-size: 20px;
+                      width: 20px;
+                      height: 20px;
+                      color: #ffc107;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      // Reputation List
+      .reputation-list {
+        display: grid;
+        gap: 16px;
+        
+        .reputation-card {
+          .reputation-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            
+            .rank-badge {
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 20px;
+              font-weight: 700;
+              color: #333;
+              box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+            }
+            
+            .profile-info {
+              flex: 1;
+              
+              h3 {
+                margin: 0 0 4px 0;
+                font-size: 18px;
+                font-weight: 600;
+              }
+              
+              .level-chip {
+                background-color: #667eea;
+                color: white;
+                text-transform: uppercase;
+                font-size: 11px;
+                font-weight: 600;
+              }
+            }
+            
+            .score {
+              text-align: right;
+              
+              .score-value {
+                display: block;
+                font-size: 28px;
+                font-weight: 700;
+                color: #667eea;
+                line-height: 1;
+              }
+              
+              .score-label {
+                display: block;
+                font-size: 12px;
+                color: #666;
+              }
+            }
+          }
+          
+          .reputation-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+            
+            .metric-item {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 12px;
+              background-color: #f5f5f5;
+              border-radius: 8px;
+              
+              mat-icon {
+                color: #667eea;
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+              }
+              
+              span {
+                font-size: 13px;
+                color: #666;
+              }
+            }
+          }
+          
+          .badges-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            
+            .achievement-chip {
+              background-color: #667eea;
+              color: white;
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              
+              mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+              }
+            }
+          }
+        }
+      }
+      
+      // Fraud Alerts List
+      .fraud-alerts-list {
+        display: grid;
+        gap: 16px;
+        
+        .fraud-alert-card {
+          border-left: 4px solid #ff9800;
+          
+          &.critical {
+            border-left-color: #f44336;
+            background-color: #ffebee;
+          }
+          
+          .alert-header {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            
+            > mat-icon {
+              font-size: 32px;
+              width: 32px;
+              height: 32px;
+            }
+            
+            .alert-title {
+              flex: 1;
+              
+              h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 600;
+              }
+              
+              .meta {
+                margin: 4px 0 0 0;
+                font-size: 13px;
+                color: #666;
+              }
+            }
+            
+            .severity-chip {
+              color: white;
+              font-weight: 600;
+              text-transform: uppercase;
+            }
+          }
+          
+          .alert-body {
+            .alert-info {
+              background-color: #f5f5f5;
+              padding: 16px;
+              border-radius: 8px;
+              margin-bottom: 16px;
+              
+              .info-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid #e0e0e0;
+                
+                &:last-child {
+                  border-bottom: none;
+                }
+                
+                .label {
+                  font-weight: 500;
+                  color: #666;
+                }
+                
+                .value {
+                  font-weight: 600;
+                }
+              }
+            }
+            
+            .indicators-section {
+              margin-bottom: 16px;
+              
+              h4 {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0 0 12px 0;
+              }
+              
+              .indicator {
+                background-color: #fff3cd;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 8px;
+                
+                .indicator-header {
+                  display: flex;
+                  justify-content: space-between;
+                  margin-bottom: 8px;
+                  
+                  .indicator-type {
+                    font-weight: 600;
+                    color: #333;
+                  }
+                  
+                  .indicator-weight {
+                    font-size: 12px;
+                    color: #666;
+                  }
+                }
+                
+                p {
+                  margin: 0;
+                  font-size: 14px;
+                  color: #666;
+                  
+                  &.evidence {
+                    margin-top: 8px;
+                    font-size: 13px;
+                    font-style: italic;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 960px) {
+  .trust-layer-container {
+    padding: 16px;
+    
+    .header-card .header-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 24px;
+      
+      .header-text h1 {
+        font-size: 24px;
+        
+        mat-icon {
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+        }
+      }
+    }
+    
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .content-card .tab-content .toolbar {
+      flex-direction: column;
+      
+      .search-field,
+      mat-form-field {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .trust-layer-container {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .content-card .tab-content {
+      padding: 16px;
+      
+      .verifications-list .verification-card .verification-header {
+        flex-direction: column;
+        gap: 12px;
+        
+        .status-chip {
+          align-self: flex-start;
+        }
+      }
+      
+      .peer-reviews-list .peer-review-card .review-body .review-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .reputation-list .reputation-card .reputation-header {
+        flex-wrap: wrap;
+        
+        .score {
+          width: 100%;
+          text-align: left;
+          margin-top: 8px;
+        }
+      }
+    }
+  }
+}

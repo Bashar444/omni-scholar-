@@ -1,0 +1,465 @@
+// Dark Mode Toggle Button Styling
+// Sun/moon icon toggle with smooth transitions
+
+@use './design-system' as ds;
+
+// ============================================
+// DARK MODE TOGGLE BUTTON
+// ============================================
+
+.dark-mode-toggle {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all ds.$transition-base;
+  box-shadow: var(--shadow-sm);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-300);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+  }
+  
+  // Icon container
+  &__icon-wrapper {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  // Sun icon (light mode)
+  &__sun {
+    position: absolute;
+    color: var(--warning);
+    transition: all ds.$transition-base;
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+    
+    .pi {
+      font-size: 1.75rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    [data-theme='dark'] & {
+      transform: rotate(90deg) scale(0);
+      opacity: 0;
+    }
+  }
+  
+  // Moon icon (dark mode)
+  &__moon {
+    position: absolute;
+    color: var(--info);
+    transition: all ds.$transition-base;
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
+    
+    .pi {
+      font-size: 1.75rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    [data-theme='dark'] & {
+      transform: rotate(0deg) scale(1);
+      opacity: 1;
+    }
+  }
+  
+  // Tooltip
+  &__tooltip {
+    position: absolute;
+    bottom: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gray-900);
+    color: white;
+    padding: ds.$space-2 ds.$space-3;
+    border-radius: var(--radius-md);
+    font-size: ds.$text-xs;
+    font-weight: ds.$font-medium;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity ds.$transition-fast;
+    z-index: 1000;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 4px solid var(--gray-900);
+    }
+  }
+  
+  &:hover &__tooltip {
+    opacity: 1;
+  }
+  
+  // Compact variant for mobile
+  &--compact {
+    width: 44px;
+    height: 44px;
+    
+    .dark-mode-toggle__icon-wrapper {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .dark-mode-toggle__sun .pi,
+    .dark-mode-toggle__moon .pi {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      transition: all 0.3s ease;
+    }
+  }
+  
+  // Fab variant (floating action button)
+  &--fab {
+    position: fixed;
+    bottom: ds.$space-6;
+    right: ds.$space-6;
+    width: 56px;
+    height: 56px;
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    
+    &:hover {
+      box-shadow: var(--shadow-xl);
+    }
+  }
+}
+
+// ============================================
+// THEME TRANSITION OVERLAY
+// ============================================
+
+.theme-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--background);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity ds.$transition-base;
+  
+  &--active {
+    opacity: 1;
+    animation: themeFlash 0.4s ds.$ease-out;
+  }
+}
+
+@keyframes themeFlash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+// ============================================
+// THEME TOGGLE IN HEADER
+// ============================================
+
+.header-theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: ds.$space-2;
+  padding: ds.$space-2;
+  border-radius: var(--radius-md);
+  transition: background ds.$transition-fast;
+  
+  &:hover {
+    background: var(--gray-100);
+  }
+  
+  &__label {
+    font-size: ds.$text-sm;
+    font-weight: ds.$font-medium;
+    color: var(--text-secondary);
+    display: none;
+    
+    @include ds.responsive(ds.$breakpoint-md) {
+      display: block;
+    }
+  }
+}
+
+// ============================================
+// THEME PREFERENCE SELECTOR (Optional)
+// ============================================
+
+.theme-selector {
+  display: inline-flex;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: ds.$space-1;
+  gap: ds.$space-1;
+  
+  &__option {
+    display: flex;
+    align-items: center;
+    gap: ds.$space-2;
+    padding: ds.$space-2 ds.$space-3;
+    border-radius: var(--radius-md);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: ds.$text-sm;
+    font-weight: ds.$font-medium;
+    cursor: pointer;
+    transition: all ds.$transition-fast;
+    
+    .pi {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: all 0.2s ease;
+    }
+    
+    &:hover {
+      background: var(--gray-100);
+      color: var(--text-primary);
+    }
+    
+    &--active {
+      background: var(--primary-500);
+      color: white;
+      
+      &:hover {
+        background: var(--primary-600);
+      }
+    }
+  }
+  
+  &__label {
+    display: none;
+    
+    @include ds.responsive(ds.$breakpoint-sm) {
+      display: inline;
+    }
+  }
+}
+
+// ============================================
+// SYSTEM PREFERENCE INDICATOR
+// ============================================
+
+.system-preference-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: ds.$space-1;
+  padding: ds.$space-1 ds.$space-2;
+  background: var(--info);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: ds.$text-xs;
+  font-weight: ds.$font-semibold;
+  
+  .pi {
+    font-size: 0.875rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    transition: all 0.2s ease;
+  }
+}
+
+// ============================================
+// THEME SWITCH ANIMATION
+// ============================================
+
+.theme-switch-animation {
+  &--light-to-dark {
+    animation: lightToDark 0.6s ds.$ease-out;
+  }
+  
+  &--dark-to-light {
+    animation: darkToLight 0.6s ds.$ease-out;
+  }
+}
+
+@keyframes lightToDark {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(0.7);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes darkToLight {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+
+@media (max-width: ds.$breakpoint-md) {
+  .dark-mode-toggle--fab {
+    bottom: ds.$space-4;
+    right: ds.$space-4;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .theme-selector {
+    &__option {
+      padding: ds.$space-2;
+    }
+  }
+}
+
+@media (max-width: ds.$breakpoint-sm) {
+  .dark-mode-toggle {
+    width: 44px;
+    height: 44px;
+    
+    &__icon-wrapper {
+      width: 24px;
+      height: 24px;
+    }
+    
+    &__sun .pi,
+    &__moon .pi {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      transition: all 0.3s ease;
+    }
+  }
+  
+  .theme-selector {
+    &__label {
+      display: none;
+    }
+  }
+}
+
+// ============================================
+// DARK MODE SPECIFIC STYLES
+// ============================================
+
+[data-theme='dark'] {
+  .dark-mode-toggle {
+    background: var(--surface-elevated);
+    
+    &:hover {
+      border-color: var(--primary-400);
+    }
+  }
+  
+  .header-theme-toggle {
+    &:hover {
+      background: var(--surface-elevated);
+    }
+  }
+  
+  .theme-selector {
+    background: var(--surface-elevated);
+  }
+  
+  .dark-mode-toggle__tooltip {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-color);
+    
+    &::before {
+      border-bottom-color: var(--surface-elevated);
+    }
+  }
+}
+
+// ============================================
+// ACCESSIBILITY
+// ============================================
+
+// Screen reader only text
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .dark-mode-toggle__sun,
+  .dark-mode-toggle__moon {
+    transition: opacity ds.$transition-fast;
+    transform: none !important;
+  }
+  
+  .theme-transition-overlay--active {
+    animation: none;
+    opacity: 0;
+  }
+  
+  .theme-switch-animation {
+    animation: none !important;
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .dark-mode-toggle {
+    border-width: 2px;
+    
+    &:focus-visible {
+      outline-width: 3px;
+    }
+  }
+}

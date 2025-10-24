@@ -1,0 +1,209 @@
+// Enhanced Button Styles for OmniScholar
+// Modern Material Design with improved shadows, hover effects, and animations
+
+@use './variables' as vars;
+
+// Primary buttons - Elevated with smooth shadows
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary {
+  border-radius: vars.$border-radius-md !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: vars.$shadow-md !important;
+  transition: all vars.$transition-base !important;
+  text-transform: none !important;
+  padding: 0 24px !important;
+  
+  &:hover:not([disabled]) {
+    box-shadow: vars.$shadow-lg !important;
+    transform: translateY(-2px);
+  }
+  
+  &:active:not([disabled]) {
+    box-shadow: vars.$shadow-sm !important;
+    transform: translateY(0);
+  }
+  
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Accent buttons - More vibrant
+.mat-mdc-raised-button.mat-accent,
+.mat-mdc-unelevated-button.mat-accent {
+  border-radius: vars.$border-radius-md !important;
+  font-weight: 600 !important;
+  box-shadow: vars.$shadow-md !important;
+  transition: all vars.$transition-base !important;
+  
+  &:hover:not([disabled]) {
+    box-shadow: vars.$shadow-lg !important;
+    transform: translateY(-2px);
+  }
+}
+
+// Stroked/Outlined buttons - Modern borders
+.mat-mdc-outlined-button,
+.mat-mdc-stroked-button {
+  border-radius: vars.$border-radius-md !important;
+  font-weight: 500 !important;
+  border-width: 2px !important;
+  transition: all vars.$transition-base !important;
+  background-color: rgba(63, 81, 181, 0.06) !important;
+  color: var(--omni-text-primary) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+  &:hover:not([disabled]) {
+    background-color: rgba(63, 81, 181, 0.12) !important;
+    border-width: 2px !important;
+    transform: translateY(-1px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), vars.$shadow-sm;
+  }
+
+  &.mat-primary {
+    border-color: rgba(33, 150, 243, 0.45) !important;
+    color: var(--primary-700, #1976D2) !important;
+
+    &:hover:not([disabled]) {
+      background-color: rgba(33, 150, 243, 0.18) !important;
+      color: var(--primary-50, #E3F2FD) !important;
+    }
+  }
+
+  &.mat-accent {
+    border-color: rgba(233, 30, 99, 0.45) !important;
+    color: var(--accent-700, #C2185B) !important;
+
+    &:hover:not([disabled]) {
+      background-color: rgba(233, 30, 99, 0.16) !important;
+      color: #fff !important;
+    }
+  }
+}
+
+// Icon buttons - Better touch targets
+.mat-mdc-icon-button {
+  border-radius: vars.$border-radius-md !important;
+  transition: all vars.$transition-fast !important;
+  
+  &:hover:not([disabled]) {
+    background-color: rgba(0, 0, 0, 0.04);
+    transform: scale(1.1);
+  }
+  
+  &:active:not([disabled]) {
+    transform: scale(0.95);
+  }
+}
+
+// FAB buttons - Floating action buttons
+.mat-mdc-fab,
+.mat-mdc-mini-fab {
+  box-shadow: vars.$shadow-lg !important;
+  transition: all vars.$transition-base !important;
+  
+  &:hover:not([disabled]) {
+    box-shadow: vars.$shadow-xl !important;
+    transform: translateY(-4px) scale(1.05);
+  }
+  
+  &:active:not([disabled]) {
+    box-shadow: vars.$shadow-md !important;
+    transform: translateY(-2px) scale(1);
+  }
+}
+
+// Button groups - Seamless connections
+.mat-button-toggle-group {
+  border-radius: vars.$border-radius-md !important;
+  box-shadow: vars.$shadow-sm;
+  
+  .mat-button-toggle {
+    border-radius: 0 !important;
+    
+    &:first-child {
+      border-top-left-radius: vars.$border-radius-md !important;
+      border-bottom-left-radius: vars.$border-radius-md !important;
+    }
+    
+    &:last-child {
+      border-top-right-radius: vars.$border-radius-md !important;
+      border-bottom-right-radius: vars.$border-radius-md !important;
+    }
+    
+    &.mat-button-toggle-checked {
+      background-color: var(--omni-primary);
+      color: white;
+    }
+  }
+}
+
+// Loading state for buttons
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button {
+  &.loading {
+    position: relative;
+    pointer-events: none;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spinner 0.6s linear infinite;
+    }
+  }
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+// Ripple effect enhancement
+.mat-ripple {
+  &.mat-mdc-button-ripple {
+    border-radius: vars.$border-radius-md;
+  }
+}
+
+// Button with icons - Better spacing
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button,
+.mat-mdc-stroked-button {
+  mat-icon {
+    margin-right: 8px;
+    transition: transform vars.$transition-fast;
+  }
+  
+  &:hover:not([disabled]) mat-icon {
+    transform: scale(1.1);
+  }
+}
+
+// Responsive button sizing
+@media (max-width: vars.$breakpoint-sm) {
+  .mat-mdc-raised-button,
+  .mat-mdc-unelevated-button,
+  .mat-mdc-outlined-button,
+  .mat-mdc-stroked-button {
+    padding: 0 16px !important;
+    font-size: 13px !important;
+  }
+  
+  .mat-mdc-icon-button {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 8px !important;
+  }
+}

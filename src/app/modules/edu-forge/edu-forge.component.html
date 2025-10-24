@@ -1,0 +1,526 @@
+<div class="edu-forge-container">
+  <!-- Header -->
+  <p-card styleClass="header-card">
+    <div class="flex align-items-center">
+      <i class="pi pi-book mr-2 text-2xl"></i>
+      <div>
+        <h2 class="mb-1">EduForge</h2>
+        <p class="text-gray-600 m-0">AI-Powered Learning & Mentorship Platform</p>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- User Stats Dashboard -->
+  @if (userStats()) {
+    <div class="grid grid-cols-4 gap-4 mt-4">
+      <p-card styleClass="stat-card">
+        <div class="text-center">
+          <i class="pi pi-book text-2xl mb-3"></i>
+          <h3 class="mb-1">{{ userStats()!.coursesEnrolled }}</h3>
+          <p class="text-gray-600 m-0">Enrolled Courses</p>
+        </div>
+      </p-card>
+      <p-card styleClass="stat-card primary">
+        <div class="text-center">
+          <i class="pi pi-check-circle text-2xl mb-3"></i>
+          <h3 class="mb-1">{{ userStats()!.coursesCompleted }}</h3>
+          <p class="text-gray-600 m-0">Completed</p>
+        </div>
+      </p-card>
+      <p-card styleClass="stat-card accent">
+        <div class="text-center">
+          <i class="pi pi-verified text-2xl mb-3"></i>
+          <h3 class="mb-1">{{ userStats()!.certificatesEarned }}</h3>
+          <p class="text-gray-600 m-0">Certificates</p>
+        </div>
+      </p-card>
+      <p-card styleClass="stat-card success">
+        <div class="text-center">
+          <i class="pi pi-bolt text-2xl mb-3"></i>
+          <h3 class="mb-1">{{ userStats()!.currentStreak }}</h3>
+          <p class="text-gray-600 m-0">Day Streak</p>
+        </div>
+      </p-card>
+    </div>
+  }
+
+  <!-- Main Tabs -->
+  <p-tabView [(activeIndex)]="activeTabIndex">
+    <!-- Courses Tab -->
+    <p-tabPanel [selected]="activeTabIndex === 0">
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center">
+          <i class="pi pi-book mr-2"></i>
+          <span>Courses</span>
+          <p-badge [value]="courses().length.toString()" severity="info" styleClass="ml-2"></p-badge>
+        </div>
+      </ng-template>
+
+      <div class="tab-content">
+        <!-- Toolbar -->
+        <div class="flex gap-3 mb-3">
+          <span class="p-input-icon-left flex-grow-1">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText [(ngModel)]="searchQuery" 
+                   (keyup.enter)="searchCourses()" 
+                   placeholder="Title, topic, or instructor"
+                   class="w-full" />
+          </span>
+
+          <p-multiSelect [(ngModel)]="selectedCategories" 
+                      [options]="categories"
+                      optionLabel="formatCategory(category)"
+                      placeholder="Select Categories"
+                      class="w-15rem"></p-multiSelect>
+
+          <p-multiSelect [(ngModel)]="selectedDifficulties" 
+                      [options]="difficulties"
+                      placeholder="Select Difficulties"
+                      class="w-15rem"></p-multiSelect>
+
+          <p-button icon="pi pi-search" 
+                  label="Search" 
+                  severity="primary" 
+                  (onClick)="searchCourses()"></p-button>
+        </div>
+
+        <!-- Loading State -->
+        @if (isLoading()) {
+          <div class="flex flex-column align-items-center mt-4">
+            <p-progressSpinner [style]="{ width: '50px', height: '50px' }"></p-progressSpinner>
+            <p>Loading courses...</p>
+          </div>
+        }
+
+        <!-- Courses Grid -->
+        @if (!isLoading() && filteredCourses().length > 0) {
+          <div class="grid">
+            @for (course of filteredCourses(); track course.id) {
+              <div class="col-12 md:col-6 lg:col-4 xl:col-3">
+                <p-card styleClass="course-card h-full">
+                  <ng-template pTemplate="header">
+                    <div class="relative">
+                      <img [src]="course.thumbnail || 'https://via.placeholder.com/350x200?text=' + course.title" 
+                           [alt]="course.title"
+                           class="w-full">
+                      @if (course.isFeatured) {
+                        <p-chip label="Featured" styleClass="absolute top-0 right-0 m-2"></p-chip>
+                      }
+                    </div>
+                  </ng-template>
+
+                  <ng-template pTemplate="title">
+                    {{ course.title }}
+                  </ng-template>
+                  
+                  <ng-template pTemplate="subtitle">
+                    {{ course.instructor }}
+                  </ng-template>
+
+                  <p class="description line-clamp-3">{{ course.description }}</p>
+
+                  <div class="course-meta flex gap-2 mb-3">
+                    <p-chip [style]="{ backgroundColor: getDifficultyColor(course.difficulty) }">
+                      <i class="pi pi-chart-line mr-2"></i>
+                      {{ course.difficulty }}
+                    </p-chip>
+                    <p-chip>
+                      <i class="pi {{ getCategoryIcon(course.category) }} mr-2"></i>
+                      {{ formatCategory(course.category) }}
+                    </p-chip>
+                  </div>
+
+                  <div class="course-stats grid grid-cols-2 gap-2 mb-3">
+                    <div class="stat flex align-items-center">
+                      <i class="pi pi-clock mr-2"></i>
+                      <span>{{ course.duration }}m</span>
+                    </div>
+                    <div class="stat flex align-items-center">
+                      <i class="pi pi-video mr-2"></i>
+                      <span>{{ course.lessonsCount }} lessons</span>
+                    </div>
+                    <div class="stat flex align-items-center">
+                      <i class="pi pi-users mr-2"></i>
+                      <span>{{ course.enrolledCount }}</span>
+                    </div>
+                    <div class="stat rating flex align-items-center">
+                      <i class="pi pi-star-fill mr-2"></i>
+                      <span>{{ course.rating }} ({{ course.reviewsCount }})</span>
+                    </div>
+                  </div>
+
+                  @if (course.topics.length > 0) {
+                    <div class="topics flex flex-wrap gap-1">
+                      @for (topic of course.topics.slice(0, 3); track topic) {
+                        <p-chip [label]="topic" styleClass="small"></p-chip>
+                      }
+                      @if (course.topics.length > 3) {
+                        <p-chip [label]="'+' + (course.topics.length - 3) + ' more'" 
+                               styleClass="small"></p-chip>
+                      }
+                    </div>
+                  }
+
+                  <ng-template pTemplate="footer">
+                    <div class="flex justify-content-between gap-2">
+                      <p-button icon="pi pi-eye" 
+                               label="View Details" 
+                               (onClick)="viewCourse(course)"
+                               styleClass="p-button-text"></p-button>
+                      <p-button icon="pi pi-plus" 
+                               label="Enroll" 
+                               (onClick)="enrollCourse(course.id)"></p-button>
+                    </div>
+                  </ng-template>
+                </p-card>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Empty State -->
+        @if (!isLoading() && filteredCourses().length === 0) {
+          <div class="flex flex-column align-items-center justify-content-center my-6">
+            <i class="pi pi-book text-6xl text-gray-400 mb-4"></i>
+            <h3 class="text-2xl font-bold mb-2">No Courses Found</h3>
+            <p class="text-gray-600 mb-4">Try adjusting your search criteria or browse all available courses</p>
+            <p-button icon="pi pi-refresh" 
+                     label="Clear Filters" 
+                     (onClick)="clearSearch()"
+                     severity="primary"></p-button>
+          </div>
+        }
+      </div>
+    </p-tabPanel>
+
+    <!-- Mentors Tab -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center">
+          <i class="pi pi-user mr-2"></i>
+          <span>Mentors</span>
+          <p-badge [value]="mentors().length.toString()" severity="warning" styleClass="ml-2"></p-badge>
+        </div>
+      </ng-template>
+
+      <div class="p-3">
+        <div class="flex gap-3 mb-3">
+          <span class="p-input-icon-left flex-grow-1">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText [(ngModel)]="mentorSearchQuery" 
+                   (keyup.enter)="searchMentors()" 
+                   placeholder="Name, expertise, or research area"
+                   class="w-full" />
+          </span>
+
+          <p-button icon="pi pi-search" 
+                    label="Search" 
+                    severity="primary" 
+                    (onClick)="searchMentors()"></p-button>
+        </div>
+
+        @if (filteredMentors().length > 0) {
+          <div class="grid">
+            @for (mentor of filteredMentors(); track mentor.id) {
+              <div class="col-12 md:col-6 xl:col-4">
+                <p-card styleClass="mentor-card h-full">
+                  <ng-template pTemplate="header">
+                    <div class="relative">
+                      <img [src]="mentor.avatar" [alt]="mentor.name" class="w-full h-48 object-cover">
+                      @if (mentor.isFeatured) {
+                        <p-chip label="Top Mentor" styleClass="absolute top-0 right-0 m-2"></p-chip>
+                      }
+                    </div>
+                  </ng-template>
+
+                  <ng-template pTemplate="title">
+                    {{ mentor.name }}
+                  </ng-template>
+
+                  <ng-template pTemplate="subtitle">
+                    {{ mentor.title }}
+                  </ng-template>
+
+                  <p class="bio line-clamp-2 mb-3">{{ mentor.bio }}</p>
+
+                  <div class="mentor-stats grid">
+                    <div class="col-6 mb-2">
+                      <div class="stat-item flex align-items-center">
+                        <i class="pi pi-file mr-2"></i>
+                        <span>{{ mentor.publications }} publications</span>
+                      </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                      <div class="stat-item flex align-items-center">
+                        <i class="pi pi-chart-line mr-2"></i>
+                        <span>h-index: {{ mentor.hIndex }}</span>
+                      </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                      <div class="stat-item flex align-items-center">
+                        <i class="pi pi-users mr-2"></i>
+                        <span>{{ mentor.menteeCount }} mentees</span>
+                      </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                      <div class="stat-item rating flex align-items-center">
+                        <i class="pi pi-star-fill mr-2"></i>
+                        <span>{{ mentor.rating }} ({{ mentor.reviewsCount }})</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="expertise mb-3">
+                    <h4 class="mb-2">Expertise:</h4>
+                    <div class="flex flex-wrap gap-1">
+                      @for (skill of mentor.expertise.slice(0, 4); track skill) {
+                        <p-chip [label]="skill" styleClass="small"></p-chip>
+                      }
+                    </div>
+                  </div>
+
+                  @if (mentor.hourlyRate) {
+                    <div class="rate flex align-items-center mb-2">
+                      <i class="pi pi-dollar mr-2"></i>
+                      <strong>{{ mentor.hourlyRate }}/hour</strong>
+                    </div>
+                  }
+
+                  <div class="availability flex align-items-center">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span>{{ mentor.availability.length }} time slots available</span>
+                  </div>
+
+                  <ng-template pTemplate="footer">
+                    <div class="flex justify-content-between gap-2">
+                      <p-button icon="pi pi-eye" 
+                               label="View Profile" 
+                               (onClick)="viewMentor(mentor)"
+                               styleClass="p-button-text"></p-button>
+                      <p-button icon="pi pi-calendar" 
+                               label="Request Session" 
+                               severity="secondary"
+                               (onClick)="requestMentorship(mentor)"></p-button>
+                    </div>
+                  </ng-template>
+                </p-card>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="flex flex-column align-items-center justify-content-center my-6">
+            <i class="pi pi-users text-6xl text-gray-400 mb-4"></i>
+            <h3 class="text-2xl font-bold mb-2">No Mentors Found</h3>
+            <p class="text-gray-600">Try adjusting your search criteria</p>
+          </div>
+        }
+      </div>
+    </p-tabPanel>
+
+    <!-- My Learning Tab -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center">
+          <i class="pi pi-book mr-2"></i>
+          <span>My Learning</span>
+          <p-badge [value]="userProgress().length.toString()" severity="info" styleClass="ml-2"></p-badge>
+        </div>
+      </ng-template>
+
+      <div class="p-3">
+        <h2 class="text-2xl font-semibold mb-4">Your Enrolled Courses</h2>
+
+        @if (userProgress().length > 0) {
+          <div class="grid">
+            @for (progress of userProgress(); track progress.courseId) {
+              <div class="col-12 lg:col-6">
+                <p-card styleClass="progress-card h-full">
+                  <ng-template pTemplate="title">
+                    {{ getCourseTitle(progress.courseId) }}
+                  </ng-template>
+
+                  <ng-template pTemplate="subtitle">
+                    Enrolled: {{ formatDate(progress.enrolledAt) }}
+                  </ng-template>
+
+                  <div class="progress-details grid mb-3">
+                    <div class="col-4">
+                      <div class="progress-stat text-center">
+                        <div class="label text-gray-600 mb-1">Lessons</div>
+                        <div class="value font-bold">
+                          {{ progress.completedLessons.length }} / {{ progress.totalLessons }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="progress-stat text-center">
+                        <div class="label text-gray-600 mb-1">Quizzes</div>
+                        <div class="value font-bold">
+                          {{ progress.completedQuizzes.length }} / {{ progress.totalQuizzes }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="progress-stat text-center">
+                        <div class="label text-gray-600 mb-1">Progress</div>
+                        <div class="value font-bold">{{ progress.progressPercentage }}%</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p-progressBar 
+                    [value]="progress.progressPercentage"
+                    [styleClass]="progress.progressPercentage === 100 ? 'success' : ''">
+                  </p-progressBar>
+
+                  @if (progress.certificateEarned) {
+                    <div class="flex align-items-center gap-2 my-3 text-green-600">
+                      <i class="pi pi-verified"></i>
+                      <span>Certificate Earned!</span>
+                    </div>
+                  }
+
+                  <ng-template pTemplate="footer">
+                    <div class="flex justify-content-between gap-2">
+                      <p-button icon="pi pi-play" 
+                               label="Continue Learning" 
+                               (onClick)="continueCourse(progress.courseId)"
+                               styleClass="p-button-text"></p-button>
+                      @if (progress.certificateEarned) {
+                        <p-button icon="pi pi-download" 
+                                 label="Download Certificate"
+                                 severity="secondary"></p-button>
+                      }
+                    </div>
+                  </ng-template>
+                </p-card>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="flex flex-column align-items-center justify-content-center my-6">
+            <i class="pi pi-book text-6xl text-gray-400 mb-4"></i>
+            <h3 class="text-2xl font-bold mb-2">No Enrolled Courses Yet</h3>
+            <p class="text-gray-600 mb-4">Start your learning journey by enrolling in a course</p>
+            <p-button icon="pi pi-search" 
+                     label="Browse Courses" 
+                     severity="primary"
+                     (onClick)="goToCoursesTab()"></p-button>
+          </div>
+        }
+      </div>
+    </p-tabPanel>
+
+    <!-- Mentorship Sessions Tab -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center">
+          <i class="pi pi-calendar mr-2"></i>
+          <span>My Sessions</span>
+          <p-badge [value]="mySessions().length.toString()" severity="success" styleClass="ml-2"></p-badge>
+        </div>
+      </ng-template>
+
+      <div class="p-3">
+        <h2 class="text-2xl font-semibold mb-4">Upcoming Mentorship Sessions</h2>
+
+        @if (mySessions().length > 0) {
+          <div class="grid">
+            @for (session of mySessions(); track session.id) {
+              <div class="col-12 lg:col-6">
+                <p-card styleClass="session-card h-full" [ngClass]="{'completed': session.status === 'completed'}">
+                  <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-3 p-3">
+                      <img [src]="'https://i.pravatar.cc/150?img=' + (session.mentorId.charCodeAt(7) % 70)" 
+                           [alt]="session.mentorName"
+                           class="w-3rem h-3rem border-circle">
+                      <div>
+                        <h3 class="m-0 text-lg font-semibold">{{ session.topic }}</h3>
+                        <p class="m-0 text-gray-600">with {{ session.mentorName }}</p>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <p class="line-clamp-2 mb-4">{{ session.description }}</p>
+
+                  <div class="grid mb-3">
+                    <div class="col-12 mb-2">
+                      <div class="flex align-items-center">
+                        <i class="pi pi-calendar mr-2"></i>
+                        <span>{{ formatDateTime(session.scheduledAt) }}</span>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-2">
+                      <div class="flex align-items-center">
+                        <i class="pi pi-clock mr-2"></i>
+                        <span>{{ session.duration }} minutes</span>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-2">
+                      <div class="flex align-items-center">
+                        <i class="pi pi-circle mr-2"></i>
+                        <span [ngClass]="{
+                          'text-green-600': session.status === 'scheduled',
+                          'text-blue-600': session.status === 'completed'
+                        }">{{ session.status | titlecase }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  @if (session.meetingLink && session.status === 'scheduled') {
+                    <div class="flex align-items-center gap-2 mb-3">
+                      <i class="pi pi-video"></i>
+                      <a [href]="session.meetingLink" 
+                         target="_blank"
+                         class="text-primary hover:text-primary-600">Join Meeting</a>
+                    </div>
+                  }
+
+                  @if (session.rating && session.feedback) {
+                    <div class="feedback surface-50 p-3 border-round">
+                      <div class="flex gap-1 mb-2">
+                        @for (star of [1,2,3,4,5]; track star) {
+                          <i class="pi" 
+                             [ngClass]="{'pi-star-fill text-yellow-500': star <= session.rating!, 
+                                       'pi-star text-gray-400': star > session.rating!}"></i>
+                        }
+                      </div>
+                      <p class="m-0 line-clamp-3">{{ session.feedback }}</p>
+                    </div>
+                  }
+
+                  <ng-template pTemplate="footer">
+                    <div class="flex justify-content-between gap-2">
+                      @if (session.status === 'scheduled') {
+                        <p-button icon="pi pi-times" 
+                                 label="Cancel" 
+                                 severity="danger"
+                                 styleClass="p-button-text"
+                                 (onClick)="cancelSession(session.id)"></p-button>
+                      }
+                      @if (session.status === 'completed' && !session.rating) {
+                        <p-button icon="pi pi-star" 
+                                 label="Rate Session"
+                                 (onClick)="rateSession(session)"></p-button>
+                      }
+                    </div>
+                  </ng-template>
+                </p-card>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="flex flex-column align-items-center justify-content-center my-6">
+            <i class="pi pi-calendar text-6xl text-gray-400 mb-4"></i>
+            <h3 class="text-2xl font-bold mb-2">No Sessions Scheduled</h3>
+            <p class="text-gray-600 mb-4">Connect with mentors to schedule learning sessions</p>
+            <p-button icon="pi pi-users" 
+                     label="Find Mentors"
+                     severity="secondary"
+                     (onClick)="goToMentorsTab()"></p-button>
+          </div>
+        }
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

@@ -1,0 +1,261 @@
+// Professional Color Palette - CSS Custom Properties
+// Light and Dark mode support
+
+@use './design-system' as ds;
+
+:root {
+  // ============================================
+  // PRIMARY COLORS (Research Blue)
+  // ============================================
+  --primary-50: #{ds.$primary-50};
+  --primary-100: #{ds.$primary-100};
+  --primary-200: #{ds.$primary-200};
+  --primary-300: #{ds.$primary-300};
+  --primary-400: #{ds.$primary-400};
+  --primary-500: #{ds.$primary-500};
+  --primary-600: #{ds.$primary-600};
+  --primary-700: #{ds.$primary-700};
+  --primary-800: #{ds.$primary-800};
+  --primary-900: #{ds.$primary-900};
+  
+  // ============================================
+  // ACCENT COLORS (Vibrant Orange)
+  // ============================================
+  --accent-50: #{ds.$accent-50};
+  --accent-100: #{ds.$accent-100};
+  --accent-200: #{ds.$accent-200};
+  --accent-300: #{ds.$accent-300};
+  --accent-400: #{ds.$accent-400};
+  --accent-500: #{ds.$accent-500};
+  --accent-600: #{ds.$accent-600};
+  --accent-700: #{ds.$accent-700};
+  --accent-800: #{ds.$accent-800};
+  --accent-900: #{ds.$accent-900};
+  
+  // ============================================
+  // SEMANTIC COLORS
+  // ============================================
+  --success: #{ds.$success-color};
+  --warning: #{ds.$warning-color};
+  --error: #{ds.$error-color};
+  --info: #{ds.$info-color};
+  
+  // ============================================
+  // SOURCE-SPECIFIC COLORS
+  // ============================================
+  --arxiv-color: #{ds.$arxiv-color};
+  --pubmed-color: #{ds.$pubmed-color};
+  --crossref-color: #{ds.$crossref-color};
+  
+  // ============================================
+  // NEUTRAL GRAYS (Light Mode)
+  // ============================================
+  --gray-50: #{ds.$gray-50};
+  --gray-100: #{ds.$gray-100};
+  --gray-200: #{ds.$gray-200};
+  --gray-300: #{ds.$gray-300};
+  --gray-400: #{ds.$gray-400};
+  --gray-500: #{ds.$gray-500};
+  --gray-600: #{ds.$gray-600};
+  --gray-700: #{ds.$gray-700};
+  --gray-800: #{ds.$gray-800};
+  --gray-900: #{ds.$gray-900};
+  
+  // ============================================
+  // SURFACE COLORS (Light Mode)
+  // ============================================
+  --background: #{ds.$gray-50};
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-hover: #{ds.$gray-100};
+  
+  // ============================================
+  // TEXT COLORS (Light Mode)
+  // ============================================
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-tertiary: rgba(0, 0, 0, 0.38);
+  --text-disabled: rgba(0, 0, 0, 0.26);
+  --text-inverse: rgba(255, 255, 255, 0.87);
+  
+  // ============================================
+  // BORDER COLORS
+  // ============================================
+  --border-color: #{ds.$gray-300};
+  --border-light: #{ds.$gray-200};
+  --border-strong: #{ds.$gray-400};
+  --divider: rgba(0, 0, 0, 0.12);
+  
+  // ============================================
+  // OVERLAY & BACKDROP
+  // ============================================
+  --overlay: rgba(0, 0, 0, 0.5);
+  --backdrop: rgba(0, 0, 0, 0.32);
+  
+  // ============================================
+  // SPACING (Available as CSS vars)
+  // ============================================
+  --space-1: #{ds.$space-1};
+  --space-2: #{ds.$space-2};
+  --space-3: #{ds.$space-3};
+  --space-4: #{ds.$space-4};
+  --space-5: #{ds.$space-5};
+  --space-6: #{ds.$space-6};
+  --space-8: #{ds.$space-8};
+  --space-10: #{ds.$space-10};
+  --space-12: #{ds.$space-12};
+  --space-16: #{ds.$space-16};
+  
+  // ============================================
+  // SHADOWS
+  // ============================================
+  --shadow-xs: #{ds.$shadow-xs};
+  --shadow-sm: #{ds.$shadow-sm};
+  --shadow-md: #{ds.$shadow-md};
+  --shadow-lg: #{ds.$shadow-lg};
+  --shadow-xl: #{ds.$shadow-xl};
+  --shadow-2xl: #{ds.$shadow-2xl};
+  
+  --shadow-primary: #{ds.$shadow-primary};
+  --shadow-accent: #{ds.$shadow-accent};
+  --shadow-success: #{ds.$shadow-success};
+  --shadow-error: #{ds.$shadow-error};
+  
+  // ============================================
+  // BORDER RADIUS
+  // ============================================
+  --radius-sm: #{ds.$radius-sm};
+  --radius-md: #{ds.$radius-md};
+  --radius-lg: #{ds.$radius-lg};
+  --radius-xl: #{ds.$radius-xl};
+  --radius-2xl: #{ds.$radius-2xl};
+  --radius-full: #{ds.$radius-full};
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
+// ============================================
+// DARK MODE
+// ============================================
+
+[data-theme='dark'] {
+  // Primary colors (slightly muted for dark mode)
+  --primary-500: #64B5F6;
+  --primary-600: #42A5F5;
+  --primary-700: #2196F3;
+  
+  // Accent colors (slightly muted)
+  --accent-500: #FFB74D;
+  --accent-600: #FFA726;
+  --accent-700: #FF9800;
+  
+  // Semantic colors (adjusted for dark backgrounds)
+  --success: #66BB6A;
+  --warning: #FFCA28;
+  --error: #EF5350;
+  --info: #26C6DA;
+  
+  // Neutral grays (inverted)
+  --gray-50: #{ds.$gray-900};
+  --gray-100: #{ds.$gray-800};
+  --gray-200: #{ds.$gray-700};
+  --gray-300: #{ds.$gray-600};
+  --gray-400: #{ds.$gray-500};
+  --gray-500: #{ds.$gray-400};
+  --gray-600: #{ds.$gray-300};
+  --gray-700: #{ds.$gray-200};
+  --gray-800: #{ds.$gray-100};
+  --gray-900: #{ds.$gray-50};
+  
+  // Surface colors (dark mode)
+  --background: #{ds.$dark-bg};
+  --surface: #{ds.$dark-surface};
+  --surface-elevated: #{ds.$dark-surface-elevated};
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  
+  // Text colors (dark mode)
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-tertiary: rgba(255, 255, 255, 0.38);
+  --text-disabled: rgba(255, 255, 255, 0.26);
+  --text-inverse: rgba(0, 0, 0, 0.87);
+  
+  // Border colors (dark mode)
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --divider: rgba(255, 255, 255, 0.12);
+  
+  // Overlay & backdrop (dark mode)
+  --overlay: rgba(0, 0, 0, 0.7);
+  --backdrop: rgba(0, 0, 0, 0.6);
+  
+  // Shadows (softer in dark mode)
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+// Dark mode via media query
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    // Same as data-theme='dark' above
+    --primary-500: #64B5F6;
+    --background: #{ds.$dark-bg};
+    --surface: #{ds.$dark-surface};
+    --text-primary: rgba(255, 255, 255, 0.87);
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+// Background colors
+.bg-primary { background-color: var(--primary-500) !important; }
+.bg-accent { background-color: var(--accent-500) !important; }
+.bg-success { background-color: var(--success) !important; }
+.bg-warning { background-color: var(--warning) !important; }
+.bg-error { background-color: var(--error) !important; }
+.bg-surface { background-color: var(--surface) !important; }
+
+// Text colors
+.text-primary-color { color: var(--primary-500) !important; }
+.text-accent-color { color: var(--accent-500) !important; }
+.text-success { color: var(--success) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-error { color: var(--error) !important; }
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-tertiary { color: var(--text-tertiary) !important; }
+
+// Source-specific colors
+.text-arxiv { color: var(--arxiv-color) !important; }
+.text-pubmed { color: var(--pubmed-color) !important; }
+.text-crossref { color: var(--crossref-color) !important; }
+
+.bg-arxiv { background-color: var(--arxiv-color) !important; }
+.bg-pubmed { background-color: var(--pubmed-color) !important; }
+.bg-crossref { background-color: var(--crossref-color) !important; }
+
+// Border colors
+.border-primary { border-color: var(--primary-500) !important; }
+.border-accent { border-color: var(--accent-500) !important; }
+.border { border: 1px solid var(--border-color); }
+
+// Shadows
+.shadow-sm { box-shadow: var(--shadow-sm) !important; }
+.shadow-md { box-shadow: var(--shadow-md) !important; }
+.shadow-lg { box-shadow: var(--shadow-lg) !important; }
+.shadow-xl { box-shadow: var(--shadow-xl) !important; }
+.shadow-none { box-shadow: none !important; }
+
+// Opacity
+.opacity-0 { opacity: 0 !important; }
+.opacity-50 { opacity: 0.5 !important; }
+.opacity-100 { opacity: 1 !important; }

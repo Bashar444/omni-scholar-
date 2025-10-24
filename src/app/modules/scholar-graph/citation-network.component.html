@@ -1,0 +1,316 @@
+<div class="citation-network-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <i class="pi pi-sitemap header-icon"></i>
+      <div class="header-text">
+        <h1>Citation Network</h1>
+        <p>Visualize research paper relationships and citation patterns</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Panel -->
+  <p-card class="controls-card">
+    <div class="controls-grid">
+      <!-- Build Network -->
+      <div class="control-group">
+        <label>Build Network</label>
+        <div class="build-controls">
+          <p-dropdown [options]="demoPapers" [(ngModel)]="selectedPaperId" 
+            optionLabel="title" optionValue="id" placeholder="Select Center Paper">
+            <ng-template pTemplate="selectedItem">
+              <div>{{ selectedNode()?.title }} ({{ selectedNode()?.year }})</div>
+            </ng-template>
+            <ng-template pTemplate="item" let-paper>
+              <div>{{ paper.title }} ({{ paper.year }})</div>
+            </ng-template>
+          </p-dropdown>
+          <p-button icon="pi pi-cog" label="Build Network" 
+            (onClick)="buildNetwork(2)" [disabled]="isLoading()">
+          </p-button>
+        </div>
+      </div>
+
+      <!-- Layout -->
+      <div class="control-group">
+        <label>Layout</label>
+        <div class="layout-options">
+          <p-button styleClass="p-button-text" [class.p-highlight]="layoutType() === 'force'"
+            icon="pi pi-th-large" label="Force" (onClick)="changeLayout('force')">
+          </p-button>
+          <p-button styleClass="p-button-text" [class.p-highlight]="layoutType() === 'hierarchical'"
+            icon="pi pi-sitemap" label="Hierarchical" (onClick)="changeLayout('hierarchical')">
+          </p-button>
+          <p-button styleClass="p-button-text" [class.p-highlight]="layoutType() === 'circular'"
+            icon="pi pi-circle" label="Circular" (onClick)="changeLayout('circular')">
+          </p-button>
+          <p-button styleClass="p-button-text" [class.p-highlight]="layoutType() === 'radial'"
+            icon="pi pi-circle-fill" label="Radial" (onClick)="changeLayout('radial')">
+          </p-button>
+        </div>
+      </div>
+
+      <!-- Display Options -->
+      <div class="control-group">
+        <label>Display</label>
+        <div class="display-options">
+          <p-button styleClass="p-button-text" [class.p-highlight]="showLabels()"
+            icon="pi pi-tag" [label]="showLabels() ? 'Hide Labels' : 'Show Labels'"
+            (onClick)="toggleLabels()">
+          </p-button>
+          <div class="slider-control">
+            <i class="pi pi-circle"></i>
+            <p-slider [min]="4" [max]="16" [step]="2" [(ngModel)]="nodeSize"
+              (onChange)="adjustNodeSize($event.value || 8)">
+            </p-slider>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export -->
+      <div class="control-group">
+        <label>Export</label>
+        <div class="export-buttons">
+          <p-menu #exportMenu [popup]="true" [model]="exportMenuItems"></p-menu>
+          <p-button icon="pi pi-download" label="Export" 
+            (onClick)="exportMenu.toggle($event)">
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Network Visualization -->
+  <div class="visualization-section">
+    <!-- Graph -->
+    <p-card class="graph-card">
+      @if (isLoading()) {
+        <div class="loading-overlay">
+          <i class="pi pi-spin pi-spinner loading-icon"></i>
+          <p>Building citation network...</p>
+        </div>
+      }
+      
+      <div #svgContainer class="svg-container"></div>
+
+      <!-- Zoom Controls -->
+      <div class="zoom-controls">
+        <button pButton icon="pi pi-search" 
+          class="p-button-rounded"
+          (click)="resetZoom()" 
+          pTooltip="Reset Zoom">
+        </button>
+        <span class="zoom-level">{{ (zoomLevel() * 100).toFixed(0) }}%</span>
+      </div>
+    </p-card>
+
+    <!-- Statistics -->
+    <div class="side-section">
+      <p-card header="Network Statistics" class="stats-card">
+        <ng-template pTemplate="header">
+          <div class="p-card-header">
+            <i class="pi pi-chart-bar"></i>
+            <span>Network Statistics</span>
+          </div>
+        </ng-template>
+
+        @if (statistics(); as stats) {
+          <div class="stat-grid">
+            <div class="stat-item">
+              <i class="pi pi-chart-scatter-plot"></i>
+              <div class="stat-content">
+                <span class="stat-value">{{ stats.totalNodes }}</span>
+                <span class="stat-label">Papers</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <i class="pi pi-link"></i>
+              <div class="stat-content">
+                <span class="stat-value">{{ stats.totalLinks }}</span>
+                <span class="stat-label">Citations</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <i class="pi pi-star"></i>
+              <div class="stat-content">
+                <span class="stat-value">{{ formatNumber(stats.avgCitations) }}</span>
+                <span class="stat-label">Avg Citations</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <i class="pi pi-share-alt"></i>
+              <div class="stat-content">
+                <span class="stat-value">{{ stats.avgDegree.toFixed(1) }}</span>
+                <span class="stat-label">Avg Degree</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <i class="pi pi-chart-pie"></i>
+              <div class="stat-content">
+                <span class="stat-value">{{ formatPercent(stats.networkDensity) }}</span>
+                <span class="stat-label">Density</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <i class="pi pi-sitemap"></i>
+              <div class="stat-content">
+                <span class="stat-value">{{ stats.clusters }}</span>
+                <span class="stat-label">Clusters</span>
+              </div>
+            </div>
+          </div>
+
+          <p-divider></p-divider>
+
+          @if (stats.mostCitedPaper; as mostCited) {
+            <div class="most-cited">
+              <h4>Most Cited Paper</h4>
+              <p class="paper-title">{{ mostCited.title }}</p>
+              <p class="paper-meta">{{ mostCited.authors.join(', ') }} ({{ mostCited.year }})</p>
+              <p class="paper-citations">
+                <i class="pi pi-book"></i>
+                {{ formatNumber(mostCited.citations) }} citations
+              </p>
+            </div>
+          }
+        } @else {
+          <p class="empty-state">No statistics available. Build a network to see stats.</p>
+        }
+      </p-card>
+
+      <!-- Selected Node Details -->
+      @if (selectedNode(); as node) {
+        <p-card class="details-card"></p-card>
+          <ng-template pTemplate="header">
+            <div class="p-d-flex p-ai-center p-jc-between w-full">
+              <div class="p-d-flex p-ai-center gap-2">
+                <i class="pi pi-file-pdf text-xl"></i>
+                <h3 class="m-0">Paper Details</h3>
+              </div>
+              <p-button icon="pi pi-times" 
+                      (click)="clearSelection()" 
+                      styleClass="p-button-text p-button-rounded"
+                      pTooltip="Close">
+              </p-button>
+            </div>
+          </ng-template>
+
+          <div class="paper-content p-4">
+            <h3 class="paper-title mb-4">{{ node.title }}</h3>
+            
+            <div class="paper-info">
+              <div class="info-item">
+                <i class="pi pi-users"></i>
+                <span>{{ node.authors.join(', ') }}</span>
+              </div>
+
+              <div class="info-item">
+                <i class="pi pi-calendar"></i>
+                <span>{{ node.year }}</span>
+              </div>
+
+              <div class="info-item">
+                <i class="pi pi-book"></i>
+                <span>{{ formatNumber(node.citations) }} citations</span>
+              </div>
+
+              @if (node.source) {
+                <div class="info-item">
+                  <i class="pi pi-database"></i>
+                  <span>{{ node.source }}</span>
+                </div>
+              }
+
+              @if (node.doi) {
+                <div class="info-item">
+                  <i class="pi pi-external-link"></i>
+                  <a [href]="'https://doi.org/' + node.doi" 
+                     target="_blank" 
+                     rel="noopener"
+                     class="text-primary hover:text-primary-600 transition-colors">
+                    {{ node.doi }}
+                  </a>
+                </div>
+              }
+            </div>
+
+            @if (node.abstract) {
+              <div class="abstract mt-4">
+                <h4 class="mb-2">Abstract</h4>
+                <p>{{ node.abstract }}</p>
+              </div>
+            }
+
+            <div class="actions mt-4">
+              <p-button icon="pi pi-share-alt" 
+                       label="Show Citation Path"
+                       (onClick)="highlightPath()"
+                       severity="primary">
+              </p-button>
+            </div>
+          </div>
+      }
+
+      <!-- Legend -->
+      <p-card styleClass="legend-card">
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center gap-2">
+            <i class="pi pi-info-circle text-xl"></i>
+            <h3 class="m-0">Legend</h3>
+          </div>
+        </ng-template>
+        
+        <div class="legend-content">
+          <div class="legend-items mb-4">
+            <div class="legend-item">
+              <div class="legend-circle primary"></div>
+              <span>Center Paper</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-circle blue"></div>
+              <span>Connected Paper</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-circle orange"></div>
+              <span>Highlighted Path</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line"></div>
+              <span>Citation Link</span>
+            </div>
+          </div>
+
+          <p-divider></p-divider>
+
+          <div class="help-text">
+            <p class="font-semibold mb-2">Interactions:</p>
+            <ul class="list-none p-0 m-0">
+              <li class="flex align-items-center gap-2 mb-2">
+                <i class="pi pi-click"></i>
+                <span>Click a node to see paper details</span>
+              </li>
+              <li class="flex align-items-center gap-2 mb-2">
+                <i class="pi pi-arrows-alt"></i>
+                <span>Drag nodes to rearrange layout</span>
+              </li>
+              <li class="flex align-items-center gap-2 mb-2">
+                <i class="pi pi-search-plus"></i>
+                <span>Scroll to zoom in/out</span>
+              </li>
+              <li class="flex align-items-center gap-2">
+                <i class="pi pi-arrows-h"></i>
+                <span>Hover over nodes to highlight connections</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

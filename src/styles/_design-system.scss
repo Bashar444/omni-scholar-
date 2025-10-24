@@ -1,0 +1,337 @@
+// Professional Design System for OmniScholar
+// Inspired by Scopus, ScienceDirect, Material Design 3
+
+// ============================================
+// COLOR PALETTE - Professional Research Theme
+// ============================================
+
+// Primary Colors (Trust & Intelligence - Research Blue)
+$primary-50: #E3F2FD;
+$primary-100: #BBDEFB;
+$primary-200: #90CAF9;
+$primary-300: #64B5F6;
+$primary-400: #42A5F5;
+$primary-500: #2196F3;  // Main primary
+$primary-600: #1E88E5;
+$primary-700: #1976D2;
+$primary-800: #1565C0;
+$primary-900: #0D47A1;
+
+// Accent Colors (Energy & Action - Vibrant Orange)
+$accent-50: #FFF3E0;
+$accent-100: #FFE0B2;
+$accent-200: #FFCC80;
+$accent-300: #FFB74D;
+$accent-400: #FFA726;
+$accent-500: #FF9800;  // Main accent
+$accent-600: #FB8C00;
+$accent-700: #F57C00;
+$accent-800: #EF6C00;
+$accent-900: #E65100;
+
+// Semantic Colors
+$success-color: #4CAF50;    // Green - saved, completed
+$warning-color: #FFC107;    // Amber - caution
+$error-color: #F44336;      // Red - errors, critical
+$info-color: #00BCD4;       // Cyan - information
+
+// Source-specific Colors (Visual differentiation)
+$arxiv-color: #B31B1B;      // Deep Red
+$pubmed-color: #006699;     // Navy Blue
+$crossref-color: #16A085;   // Teal
+
+// Neutral Grays (Light mode)
+$gray-50: #FAFAFA;
+$gray-100: #F5F5F5;
+$gray-200: #EEEEEE;
+$gray-300: #E0E0E0;
+$gray-400: #BDBDBD;
+$gray-500: #9E9E9E;
+$gray-600: #757575;
+$gray-700: #616161;
+$gray-800: #424242;
+$gray-900: #212121;
+
+// Dark mode colors
+$dark-bg: #121212;
+$dark-surface: #1E1E1E;
+$dark-surface-elevated: #2C2C2C;
+
+// ============================================
+// TYPOGRAPHY SYSTEM
+// ============================================
+
+// Font Families
+$font-display: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-body: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+// Font Sizes (Responsive scale)
+$text-xs: 0.75rem;      // 12px - small labels, captions
+$text-sm: 0.875rem;     // 14px - secondary text
+$text-base: 1rem;       // 16px - body text
+$text-lg: 1.125rem;     // 18px - emphasized text
+$text-xl: 1.25rem;      // 20px - card titles
+$text-2xl: 1.5rem;      // 24px - section headers
+$text-3xl: 1.875rem;    // 30px - page titles
+$text-4xl: 2.25rem;     // 36px - hero text
+$text-5xl: 3rem;        // 48px - display text
+
+// Font Weights
+$font-light: 300;
+$font-normal: 400;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;
+$font-extrabold: 800;
+
+// Line Heights
+$leading-none: 1;
+$leading-tight: 1.25;
+$leading-snug: 1.375;
+$leading-normal: 1.5;
+$leading-relaxed: 1.625;
+$leading-loose: 2;
+
+// Letter Spacing
+$tracking-tighter: -0.05em;
+$tracking-tight: -0.025em;
+$tracking-normal: 0;
+$tracking-wide: 0.025em;
+$tracking-wider: 0.05em;
+$tracking-widest: 0.1em;
+
+// ============================================
+// SPACING SYSTEM (8px grid)
+// ============================================
+
+$space-0: 0;
+$space-1: 0.25rem;   // 4px
+$space-2: 0.5rem;    // 8px
+$space-3: 0.75rem;   // 12px
+$space-4: 1rem;      // 16px
+$space-5: 1.25rem;   // 20px
+$space-6: 1.5rem;    // 24px
+$space-7: 1.75rem;   // 28px
+$space-8: 2rem;      // 32px
+$space-10: 2.5rem;   // 40px
+$space-12: 3rem;     // 48px
+$space-14: 3.5rem;   // 56px
+$space-16: 4rem;     // 64px
+$space-20: 5rem;     // 80px
+$space-24: 6rem;     // 96px
+$space-32: 8rem;     // 128px
+
+// ============================================
+// SHADOWS & ELEVATION
+// ============================================
+
+// Subtle shadows for light mode
+$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+// Colored shadows for emphasis
+$shadow-primary: 0 4px 14px 0 rgba(33, 150, 243, 0.25);
+$shadow-accent: 0 4px 14px 0 rgba(255, 152, 0, 0.25);
+$shadow-success: 0 4px 14px 0 rgba(76, 175, 80, 0.25);
+$shadow-error: 0 4px 14px 0 rgba(244, 67, 54, 0.25);
+
+// Inner shadows
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+// ============================================
+// BORDER RADIUS
+// ============================================
+
+$radius-none: 0;
+$radius-sm: 0.25rem;    // 4px
+$radius-md: 0.5rem;     // 8px
+$radius-lg: 0.75rem;    // 12px
+$radius-xl: 1rem;       // 16px
+$radius-2xl: 1.5rem;    // 24px
+$radius-3xl: 2rem;      // 32px
+$radius-full: 9999px;   // Pill shape
+
+// ============================================
+// TRANSITIONS & ANIMATIONS
+// ============================================
+
+// Easing functions
+$ease-linear: linear;
+$ease-in: cubic-bezier(0.4, 0, 1, 1);
+$ease-out: cubic-bezier(0, 0, 0.2, 1);
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+$ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+// Duration
+$duration-75: 75ms;
+$duration-100: 100ms;
+$duration-150: 150ms;
+$duration-200: 200ms;
+$duration-300: 300ms;
+$duration-500: 500ms;
+$duration-700: 700ms;
+$duration-1000: 1000ms;
+
+// Combined transitions
+$transition-fast: all $duration-150 $ease-out;
+$transition-base: all $duration-300 $ease-in-out;
+$transition-slow: all $duration-500 $ease-in-out;
+$transition-bounce: all $duration-300 $ease-bounce;
+
+// ============================================
+// BREAKPOINTS (Mobile-first)
+// ============================================
+
+$breakpoint-xs: 480px;     // Small phones
+$breakpoint-sm: 640px;     // Phones
+$breakpoint-md: 768px;     // Tablets
+$breakpoint-lg: 1024px;    // Laptops
+$breakpoint-xl: 1280px;    // Desktops
+$breakpoint-2xl: 1536px;   // Large screens
+
+// ============================================
+// Z-INDEX LAYERS
+// ============================================
+
+$z-base: 0;
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+// ============================================
+// OPACITY SCALE
+// ============================================
+
+$opacity-0: 0;
+$opacity-10: 0.1;
+$opacity-20: 0.2;
+$opacity-30: 0.3;
+$opacity-40: 0.4;
+$opacity-50: 0.5;
+$opacity-60: 0.6;
+$opacity-70: 0.7;
+$opacity-80: 0.8;
+$opacity-90: 0.9;
+$opacity-100: 1;
+
+// ============================================
+// BLUR VALUES
+// ============================================
+
+$blur-none: 0;
+$blur-sm: 4px;
+$blur-md: 8px;
+$blur-lg: 16px;
+$blur-xl: 24px;
+$blur-2xl: 40px;
+$blur-3xl: 64px;
+
+// ============================================
+// COMPONENT-SPECIFIC VARIABLES
+// ============================================
+
+// Cards
+$card-bg: #ffffff;
+$card-border: $gray-200;
+$card-shadow: $shadow-md;
+$card-radius: $radius-lg;
+$card-padding: $space-6;
+
+// Buttons
+$button-height: 40px;
+$button-padding-x: $space-6;
+$button-radius: $radius-md;
+$button-font-weight: $font-semibold;
+
+// Inputs
+$input-height: 44px;
+$input-padding-x: $space-4;
+$input-border: $gray-300;
+$input-focus-border: $primary-500;
+$input-radius: $radius-md;
+
+// Badges
+$badge-padding-x: $space-3;
+$badge-padding-y: $space-1;
+$badge-radius: $radius-full;
+$badge-font-size: $text-xs;
+$badge-font-weight: $font-semibold;
+
+// Chips
+$chip-padding-x: $space-3;
+$chip-padding-y: $space-2;
+$chip-radius: $radius-md;
+$chip-font-size: $text-sm;
+
+// ============================================
+// MIXINS & UTILITIES
+// ============================================
+
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Multi-line truncate
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Focus visible styles
+@mixin focus-visible {
+  outline: 2px solid $primary-500;
+  outline-offset: 2px;
+}
+
+// Hover lift effect
+@mixin hover-lift {
+  transition: $transition-base;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+  
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+// Responsive breakpoint
+@mixin responsive($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+// Glassmorphism effect
+@mixin glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur($blur-lg);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+// Gradient background
+@mixin gradient-primary {
+  background: linear-gradient(135deg, $primary-500 0%, $primary-700 100%);
+}
+
+@mixin gradient-accent {
+  background: linear-gradient(135deg, $accent-500 0%, $accent-700 100%);
+}

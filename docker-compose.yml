@@ -1,0 +1,19 @@
+# Docker Compose for OmniScholar Development
+version: '3.8'
+
+services:
+  omni-scholar:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: omni-scholar-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./src:/app/src
+      - ./angular.json:/app/angular.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tsconfig.app.json:/app/tsconfig.app.json
+    environment:
+      - NODE_ENV=development
+    command: npm start -- --host 0.0.0.0 --poll 2000

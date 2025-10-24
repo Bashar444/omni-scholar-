@@ -1,0 +1,693 @@
+// Accessibility & Final Polish
+// WCAG 2.1 AA compliance, keyboard navigation, screen readers, focus management
+
+@use './design-system' as ds;
+
+// ============================================
+// SKIP LINKS (WCAG 2.1)
+// ============================================
+
+.skip-links {
+  position: absolute;
+  top: ds.$space-4;
+  left: ds.$space-4;
+  z-index: 10000;
+  
+  &__link {
+    position: absolute;
+    left: -9999px;
+    background: var(--primary-500);
+    color: white;
+    padding: ds.$space-3 ds.$space-4;
+    border-radius: var(--radius-md);
+    font-weight: ds.$font-semibold;
+    text-decoration: none;
+    box-shadow: var(--shadow-lg);
+    
+    &:focus {
+      left: 0;
+      outline: 3px solid var(--warning);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// ============================================
+// ENHANCED FOCUS INDICATORS
+// ============================================
+
+// Global focus styles
+*:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+// Interactive elements
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+// Custom focus ring
+.focus-visible-enhanced {
+  position: relative;
+  
+  &:focus-visible {
+    outline: none;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border: 3px solid var(--primary-500);
+      border-radius: var(--radius-md);
+      pointer-events: none;
+      animation: focusPulse 2s infinite;
+    }
+  }
+}
+
+@keyframes focusPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.02);
+  }
+}
+
+// ============================================
+// SCREEN READER ONLY CONTENT
+// ============================================
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable {
+  @extend .sr-only;
+  
+  &:active,
+  &:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+// ============================================
+// ARIA LIVE REGIONS
+// ============================================
+
+.aria-live-region {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+// Visual feedback for screen reader announcements
+.announcement-toast {
+  position: fixed;
+  bottom: ds.$space-6;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gray-900);
+  color: white;
+  padding: ds.$space-3 ds.$space-4;
+  border-radius: var(--radius-md);
+  font-size: ds.$text-sm;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  
+  &--visible {
+    opacity: 1;
+    animation: announceToast 3s ds.$ease-out;
+  }
+}
+
+@keyframes announceToast {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+// ============================================
+// KEYBOARD NAVIGATION HELPERS
+// ============================================
+
+// Highlight keyboard navigation mode
+body.keyboard-navigation {
+  *:focus {
+    outline: 3px solid var(--warning);
+    outline-offset: 3px;
+  }
+}
+
+// Tab trap for modals
+.modal-trap {
+  &:focus {
+    outline: none;
+  }
+}
+
+// Keyboard shortcut hints
+.keyboard-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: ds.$space-1;
+  padding: ds.$space-1 ds.$space-2;
+  background: var(--gray-100);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: ds.$text-xs;
+  font-weight: ds.$font-semibold;
+  font-family: monospace;
+  color: var(--text-secondary);
+  
+  kbd {
+    padding: 2px 4px;
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: 3px;
+    box-shadow: 0 1px 0 var(--gray-300);
+  }
+}
+
+// ============================================
+// HIGH CONTRAST MODE
+// ============================================
+
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  button,
+  a {
+    border: 2px solid currentColor;
+  }
+  
+  *:focus-visible {
+    outline-width: 4px;
+    outline-offset: 4px;
+  }
+}
+
+// ============================================
+// COLOR CONTRAST UTILITIES
+// ============================================
+
+// Ensure sufficient contrast for text
+.text-contrast-high {
+  color: var(--text-primary);
+  
+  [data-theme='dark'] & {
+    color: rgba(255, 255, 255, 0.95);
+  }
+}
+
+.text-contrast-medium {
+  color: var(--text-secondary);
+  
+  [data-theme='dark'] & {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.text-contrast-low {
+  color: var(--text-tertiary);
+  
+  [data-theme='dark'] & {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+// Background contrast helpers
+.bg-contrast-safe {
+  background: var(--surface);
+  color: var(--text-primary);
+  
+  // Ensure 4.5:1 contrast ratio
+  [data-theme='dark'] & {
+    background: var(--surface-elevated);
+  }
+}
+
+// ============================================
+// LOADING STATES & PROGRESS
+// ============================================
+
+// Determinate progress bar
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  
+  &__fill {
+    height: 100%;
+    background: var(--primary-500);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ds.$ease-out;
+  }
+  
+  // ARIA label
+  &[role="progressbar"] {
+    position: relative;
+    
+    &::after {
+      content: attr(aria-valuenow) '% complete';
+      @extend .sr-only;
+    }
+  }
+}
+
+// Indeterminate progress
+.progress-indeterminate {
+  width: 100%;
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 30%;
+    background: var(--primary-500);
+    border-radius: var(--radius-full);
+    animation: indeterminate 1.5s infinite ds.$ease-in-out;
+  }
+}
+
+@keyframes indeterminate {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+// ============================================
+// ERROR & VALIDATION STATES
+// ============================================
+
+.form-field-error {
+  border-color: var(--error) !important;
+  
+  &:focus {
+    outline-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2);
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: ds.$space-2;
+  margin-top: ds.$space-2;
+  color: var(--error);
+  font-size: ds.$text-sm;
+  
+  mat-icon {
+    flex-shrink: 0;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+  }
+  
+  // Announce to screen readers
+  &[role="alert"] {
+    font-weight: ds.$font-medium;
+  }
+}
+
+.success-message {
+  @extend .error-message;
+  color: var(--success);
+}
+
+// ============================================
+// TOOLTIPS (Accessible)
+// ============================================
+
+.tooltip-accessible {
+  position: relative;
+  
+  &__trigger {
+    cursor: help;
+    border-bottom: 1px dotted currentColor;
+    
+    &:focus,
+    &:hover {
+      + .tooltip-accessible__content {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+    }
+  }
+  
+  &__content {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: var(--gray-900);
+    color: white;
+    padding: ds.$space-2 ds.$space-3;
+    border-radius: var(--radius-md);
+    font-size: ds.$text-sm;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all ds.$transition-fast;
+    z-index: 1000;
+    pointer-events: none;
+    
+    // Arrow
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--gray-900);
+    }
+  }
+  
+  // ARIA support
+  &[aria-describedby] {
+    .tooltip-accessible__content {
+      opacity: 0;
+    }
+  }
+}
+
+// ============================================
+// MODAL ACCESSIBILITY
+// ============================================
+
+.modal-overlay {
+  &[aria-modal="true"] {
+    // Trap focus within modal
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+  }
+}
+
+.modal-content {
+  &:focus {
+    outline: none;
+  }
+  
+  // First focusable element gets focus
+  &__close:first-child:focus {
+    outline: 3px solid var(--primary-500);
+  }
+}
+
+// ============================================
+// TABLE ACCESSIBILITY
+// ============================================
+
+.accessible-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  caption {
+    padding: ds.$space-3;
+    font-weight: ds.$font-semibold;
+    text-align: left;
+    caption-side: top;
+  }
+  
+  th {
+    background: var(--gray-100);
+    padding: ds.$space-3 ds.$space-4;
+    text-align: left;
+    font-weight: ds.$font-semibold;
+    border-bottom: 2px solid var(--border-color);
+    
+    // Sortable columns
+    &[aria-sort] {
+      cursor: pointer;
+      user-select: none;
+      
+      &:hover {
+        background: var(--gray-200);
+      }
+      
+      &::after {
+        content: '↕';
+        margin-left: ds.$space-2;
+        opacity: 0.5;
+      }
+      
+      &[aria-sort="ascending"]::after {
+        content: '↑';
+        opacity: 1;
+      }
+      
+      &[aria-sort="descending"]::after {
+        content: '↓';
+        opacity: 1;
+      }
+    }
+  }
+  
+  td {
+    padding: ds.$space-3 ds.$space-4;
+    border-bottom: 1px solid var(--border-light);
+  }
+  
+  // Zebra striping
+  tbody tr:nth-child(even) {
+    background: var(--gray-50);
+  }
+  
+  // Row focus
+  tbody tr:focus-within {
+    background: var(--primary-50);
+    outline: 2px solid var(--primary-500);
+  }
+}
+
+// ============================================
+// LANDMARK ROLES & STRUCTURE
+// ============================================
+
+// Visual indicators for developers (remove in production)
+// [role="banner"],
+// [role="navigation"],
+// [role="main"],
+// [role="complementary"],
+// [role="contentinfo"] {
+//   outline: 1px dashed rgba(0, 123, 255, 0.3);
+// }
+
+// ============================================
+// PRINT STYLES
+// ============================================
+
+@media print {
+  // Hide non-essential elements
+  .no-print,
+  nav,
+  .mobile-nav,
+  .dark-mode-toggle,
+  .toast-container {
+    display: none !important;
+  }
+  
+  // Optimize layout
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+  
+  a {
+    text-decoration: underline;
+    
+    &[href]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.9em;
+      color: #666;
+    }
+  }
+  
+  // Page breaks
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  img {
+    page-break-inside: avoid;
+  }
+  
+  // Ensure readability
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+}
+
+// ============================================
+// PERFORMANCE: REDUCE MOTION
+// ============================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .focus-visible-enhanced:focus-visible::before {
+    animation: none;
+  }
+}
+
+// ============================================
+// DARK MODE ACCESSIBILITY
+// ============================================
+
+[data-theme='dark'] {
+  .keyboard-hint {
+    background: var(--surface-elevated);
+    
+    kbd {
+      background: var(--surface);
+      border-color: var(--border-color);
+      box-shadow: 0 1px 0 var(--border-color);
+    }
+  }
+  
+  .accessible-table {
+    th {
+      background: var(--surface-elevated);
+    }
+    
+    tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    tbody tr:focus-within {
+      background: rgba(33, 150, 243, 0.15);
+    }
+  }
+}
+
+// ============================================
+// FINAL POLISH: ANIMATIONS
+// ============================================
+
+// Fade in on page load
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-on-load {
+  animation: fadeInUp 0.6s ds.$ease-out;
+}
+
+// Stagger children
+.stagger-children {
+  > * {
+    animation: fadeInUp 0.5s ds.$ease-out backwards;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.05}s;
+      }
+    }
+  }
+}
+
+// ============================================
+// UTILITY: DEBUG MODE
+// ============================================
+
+// Add ?debug=true to URL to visualize accessibility structure
+body.debug-mode {
+  [role] {
+    outline: 2px solid red;
+    position: relative;
+    
+    &::before {
+      content: attr(role);
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: red;
+      color: white;
+      padding: 2px 6px;
+      font-size: 10px;
+      z-index: 10000;
+      pointer-events: none;
+    }
+  }
+  
+  [aria-label]::after {
+    content: 'ARIA: ' attr(aria-label);
+    position: absolute;
+    background: blue;
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    z-index: 10000;
+    pointer-events: none;
+  }
+}
