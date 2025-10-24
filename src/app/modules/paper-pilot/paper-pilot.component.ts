@@ -1,5 +1,5 @@
 ﻿// Angular Core
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
-import { TabView, TabViewModule } from 'primeng/tabview';
+import { TabView, TabPanel, TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -35,6 +35,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-paper-pilot',
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     PaperService,
     ExportService,
