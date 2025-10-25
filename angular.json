@@ -17,23 +17,31 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/omni-scholar-app/browser",
             "baseHref": "/omn/",
             "browser": "src/main.ts",
+            "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/primeng/resources",
+                "output": "/assets/theme"
               }
             ],
             "styles": [
-              "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
-              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeng/resources/primeng.css",
+              "node_modules/primeicons/primeicons.css",
+              "src/assets/theme/theme.scss",
               "src/styles.scss"
-            ],
-            "outputMode": "static"
+            ]
           },
           "configurations": {
             "production": {
