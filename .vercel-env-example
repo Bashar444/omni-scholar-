@@ -1,0 +1,20 @@
+# Vercel Environment Variables for OmniScholar
+# Add these to your Vercel project settings
+
+# Appwrite Configuration
+APPWRITE_PROJECT_ID=68f24a3a000dfa86723f
+APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+APPWRITE_API_KEY=your_appwrite_api_key_here
+
+# Application Configuration
+NODE_ENV=production
+NEXT_PUBLIC_APP_NAME=OmniScholar
+NEXT_PUBLIC_VERSION=0.1.0
+
+# API Configuration
+NEXT_PUBLIC_API_URL=https://scholar.omniumhub.me/api
+
+# Scholar Graph Configuration
+NEXT_PUBLIC_SCHOLAR_GRAPH_USE_LIVE=true
+NEXT_PUBLIC_SCHOLAR_GRAPH_LIVE_SOURCES=CrossRef,arXiv,PubMed
+NEXT_PUBLIC_SCHOLAR_GRAPH_CACHE_TTL_MS=120000

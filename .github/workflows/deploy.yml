@@ -25,7 +25,6 @@ on:
 
 env:
   NODE_VERSION: '20.x'
-  OCTOPUS_SPACE: 'Spaces-1'
   PROJECT_NAME: 'omni-scholar'
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -67,39 +66,6 @@ jobs:
           echo "version=1.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
         fi
         
-    # Octopus Deploy steps
-    - name: Create Release Package
-      run: |
-        cd dist/omni-scholar-app
-        zip -r ../${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version }}.zip .
-      
-    - name: Install Octopus CLI
-      uses: OctopusDeploy/install-octopus-cli-action@v1
-      with:
-        version: latest
-        
-    - name: Push to Octopus
-      uses: OctopusDeploy/push-package-action@v3
-      with:
-        api_key: ${{ secrets.OCTOPUS_API_KEY }}
-        server: ${{ secrets.OCTOPUS_SERVER_URL }}
-        space: ${{ env.OCTOPUS_SPACE }}
-        package: dist/${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version }}.zip
-        overwrite_mode: OverwriteExisting
-        
-    - name: Create Octopus Release
-      uses: OctopusDeploy/create-release-action@v3
-      with:
-        api_key: ${{ secrets.OCTOPUS_API_KEY }}
-        server: ${{ secrets.OCTOPUS_SERVER_URL }}
-        space: ${{ env.OCTOPUS_SPACE }}
-        project: ${{ env.PROJECT_NAME }}
-        version: ${{ steps.version.outputs.version }}
-        package_version: ${{ steps.version.outputs.version }}
-        
     # Vercel Deploy steps
-    - name: Pull Vercel Environment Information
-      run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      
     - name: Deploy to Vercel
       run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
