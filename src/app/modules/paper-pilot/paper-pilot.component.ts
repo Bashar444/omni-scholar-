@@ -334,6 +334,8 @@ import { MessageService } from 'primeng/api';
         &.selected {
           border: 2px solid var(--primary-color);
           background: var(--primary-50);
+        }
+      }
     }
   `]
 })

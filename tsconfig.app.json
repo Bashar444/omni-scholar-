@@ -5,6 +5,7 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "composite": true,
+    "declaration": true,
     "types": [
       "node"
     ]
