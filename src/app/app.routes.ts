@@ -3,7 +3,7 @@ import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { scholarGraphFeatureKey, scholarGraphReducer } from './modules/scholar-graph/state/scholar-graph.reducer';
 import { ScholarGraphEffects } from './modules/scholar-graph/state/scholar-graph.effects';
-import { authGuard } from './core/guards/auth.guard';
+import { routeGuard } from './core/guards/route.guard';
 
 export const routes: Routes = [
 	{
@@ -43,11 +43,24 @@ export const routes: Routes = [
 	{
 		path: 'lab-sync',
 			loadComponent: () => import('./modules/lab-sync/lab-sync.component').then(c => c.LabSyncComponent),
-			canActivate: [authGuard]
+			canActivate: [routeGuard],
+			data: {
+				requiresAuth: true,
+				roles: ['researcher', 'admin'],
+				rateLimitProtected: true
+			}
 	},
 	{
 		path: 'grant-ai',
 		loadComponent: () => import('./modules/grant-ai/grant-ai.component').then(c => c.GrantAiComponent)
+	},
+	{
+		path: 'rate-limit',
+		loadComponent: () => import('./shared/components/rate-limit/rate-limit.component').then(c => c.RateLimitComponent)
+	},
+	{
+		path: '403',
+		loadComponent: () => import('./shared/components/forbidden/forbidden.component').then(c => c.ForbiddenComponent)
 	},
 	{
 		path: 'meta-lab',

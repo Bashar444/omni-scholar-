@@ -1,0 +1,113 @@
+@import './variables.scss';
+
+// Import PrimeNG Base Theme
+@import 'primeng/resources/themes/lara-light-blue/theme.css';
+@import 'primeng/resources/primeng.css';
+@import 'primeicons/primeicons.css';
+
+// Global Styles
+:root {
+    // Colors
+    --primary-color: #{$primary-color};
+    --primary-light-color: #{$primary-light};
+    --primary-dark-color: #{$primary-dark};
+    --secondary-color: #{$secondary-color};
+    --text-color: #{$text-color};
+    --text-secondary-color: #{$text-secondary};
+    
+    // Surface Colors
+    --surface-ground: #{$surface-ground};
+    --surface-section: #{$surface-section};
+    --surface-card: #{$surface-card};
+    --surface-overlay: #{$surface-overlay};
+    --surface-border: #{$surface-border};
+    --surface-hover: #{$surface-hover};
+
+    // Status Colors
+    --info-color: #{$info-color};
+    --success-color: #{$success-color};
+    --warning-color: #{$warning-color};
+    --error-color: #{$error-color};
+
+    // Border Radius
+    --border-radius: #{$border-radius};
+
+    // Transitions
+    --transition-quick: #{$transition-quick};
+}
+
+// Typography
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--surface-ground);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+// Card Styles
+.p-card {
+    background: var(--surface-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-quick);
+
+    &:hover {
+        box-shadow: var(--card-shadow-hover);
+    }
+
+    .p-card-title {
+        color: var(--primary-color);
+    }
+}
+
+// Button Styles
+.p-button {
+    transition: var(--transition-quick);
+
+    &:not(.p-button-text):hover {
+        transform: translateY(-1px);
+        box-shadow: var(--button-shadow-hover);
+    }
+}
+
+// Input Styles
+.p-inputtext {
+    transition: var(--transition-quick);
+
+    &:hover {
+        border-color: var(--primary-light-color);
+    }
+
+    &:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-light-color);
+    }
+}
+
+// Table Styles
+.p-datatable {
+    .p-datatable-header {
+        background: var(--surface-section);
+    }
+
+    .p-datatable-tbody > tr {
+        transition: var(--transition-quick);
+
+        &:hover {
+            background: var(--surface-hover);
+        }
+    }
+}
+
+// Dialog Styles
+.p-dialog {
+    .p-dialog-header {
+        background: var(--surface-section);
+    }
+
+    .p-dialog-content {
+        background: var(--surface-section);
+    }
+}

@@ -371,7 +371,7 @@ export class PaperPilotComponent implements OnInit {
 
   selectedPapers(): UploadedPaper[] {
     const ids = this.selectedPaperIds();
-    return this.papers().filter(p => ids.has(p.id));
+    return this.papers().filter((p: UploadedPaper) => ids.has(p.id));
   }
 
   truncateText(value: string | undefined, length = 30): string {
@@ -397,7 +397,7 @@ export class PaperPilotComponent implements OnInit {
 
   deletePaper(paper: UploadedPaper): void {
     // remove from list
-    this.papers.set(this.papers().filter(p => p.id !== paper.id));
+    this.papers.set(this.papers().filter((p: UploadedPaper) => p.id !== paper.id));
     this.messageService.add({ severity: 'warn', summary: 'Deleted', detail: paper.fileName });
   }
 
@@ -427,10 +427,10 @@ export class PaperPilotComponent implements OnInit {
       return this.papers();
     }
     const query = this.searchQuery.toLowerCase();
-    return this.papers().filter(paper => 
+    return this.papers().filter((paper: UploadedPaper) => 
       paper.fileName.toLowerCase().includes(query) ||
       paper.extractedData?.title?.toLowerCase().includes(query) ||
-      paper.extractedData?.authors?.some(author => 
+      paper.extractedData?.authors?.some((author: string) => 
         author.toLowerCase().includes(query)
       ) ||
       false

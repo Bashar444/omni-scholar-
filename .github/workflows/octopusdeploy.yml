@@ -1,0 +1,132 @@
+name: Build and Deploy with Octopus
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'Production'
+        type: choice
+        options:
+          - Development
+          - Staging
+          - Production
+      version:
+        description: 'Version to deploy (optional)'
+        required: false
+        type: string
+
+env:
+  NODE_VERSION: '20.x'
+  OCTOPUS_SPACE: 'Spaces-1'
+  PROJECT_NAME: 'omni-scholar'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'Production' }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install Dependencies
+      run: |
+        npm ci
+        npm install -g @angular/cli
+      
+    - name: Lint
+      run: npm run lint
+      
+    - name: Test
+      run: npm run test -- --watch=false --browsers=ChromeHeadless
+      
+    - name: Build
+      run: npm run build -- --configuration=production
+      
+    - name: Generate version
+      id: version
+      run: |
+        if [ "${{ github.event.inputs.version }}" != "" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=1.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create Release Package
+      run: |
+        cd dist/omni-scholar-app/browser
+        zip -r ../../${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version }}.zip .
+      
+    - name: Install Octopus CLI
+      uses: OctopusDeploy/install-octopus-cli-action@v1
+      with:
+        version: latest
+        
+    - name: Push to Octopus
+      uses: OctopusDeploy/push-package-action@v3
+      with:
+        api_key: ${{ secrets.OCTOPUS_API_KEY }}
+        server: ${{ secrets.OCTOPUS_SERVER_URL }}
+        space: ${{ env.OCTOPUS_SPACE }}
+        package: dist/${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version }}.zip
+        overwrite_mode: OverwriteExisting
+        
+    - name: Create Octopus Release
+      uses: OctopusDeploy/create-release-action@v3
+      with:
+        api_key: ${{ secrets.OCTOPUS_API_KEY }}
+        server: ${{ secrets.OCTOPUS_SERVER_URL }}
+        space: ${{ env.OCTOPUS_SPACE }}
+        project: ${{ env.PROJECT_NAME }}
+        version: ${{ steps.version.outputs.version }}
+        package_version: ${{ steps.version.outputs.version }}
+        
+    - name: Deploy Release
+      uses: OctopusDeploy/deploy-release-action@v3
+      with:
+        api_key: ${{ secrets.OCTOPUS_API_KEY }}
+        server: ${{ secrets.OCTOPUS_SERVER_URL }}
+        space: ${{ env.OCTOPUS_SPACE }}
+        project: ${{ env.PROJECT_NAME }}
+        version: ${{ steps.version.outputs.version }}
+        environment: ${{ github.event.inputs.environment || 'Production' }}
+        
+    - name: Notify on Success
+      if: success()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '✅ Deployment to ${{ github.event.inputs.environment || "Production" }} successful! Version: ${{ steps.version.outputs.version }}'
+          })
+          
+    - name: Notify on Failure
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '❌ Deployment to ${{ github.event.inputs.environment || "Production" }} failed! Please check the logs.'
+          })

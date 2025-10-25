@@ -18,9 +18,12 @@ import { ButtonModule } from 'primeng/button';
   template: `
     <div class="loading-spinner-container" [class.fullscreen]="fullscreen">
       <p-progressSpinner 
-        [style]="{ width: diameter + 'px', height: diameter + 'px' }"
-        [strokeWidth]="strokeWidth"
-        [styleClass]="color">
+        [style]="{
+          width: diameter + 'px',
+          height: diameter + 'px',
+          'stroke-width': strokeWidth + 'px'
+        }"
+        [styleClass]="spinnerColorClass">
       </p-progressSpinner>
 
       @if (message) {
@@ -55,24 +58,43 @@ import { ButtonModule } from 'primeng/button';
       font-weight: 500;
     }
 
-    /* Optional color variants matching the Material style */
-    .primary .p-progress-spinner-circle {
-      stroke: #3f51b5 !important;
-    }
+    /* Spinner color variants */
+    :host ::ng-deep {
+      .spinner-primary .p-progress-spinner-circle {
+        stroke: var(--primary-color, #3f51b5) !important;
+      }
 
-    .accent .p-progress-spinner-circle {
-      stroke: #ff4081 !important;
-    }
+      .spinner-accent .p-progress-spinner-circle {
+        stroke: var(--secondary-color, #ff4081) !important;
+      }
 
-    .warn .p-progress-spinner-circle {
-      stroke: #f44336 !important;
+      .spinner-warn .p-progress-spinner-circle {
+        stroke: var(--error-color, #f44336) !important;
+      }
     }
   `]
 })
 export class LoadingSpinnerComponent {
+  /** The diameter of the spinner in pixels */
   @Input() diameter: number = 50;
+
+  /** The width of the spinner stroke in pixels */
   @Input() strokeWidth: number = 4;
-  @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
+
+  /** The color variant of the spinner */
+  @Input() color: SpinnerColor = 'primary';
+
+  /** Optional loading message to display below the spinner */
   @Input() message?: string;
+
+  /** Whether the spinner should be displayed fullscreen with overlay */
   @Input() fullscreen: boolean = false;
+
+  /** Computed class for the spinner color */
+  protected get spinnerColorClass(): string {
+    return `spinner-${this.color}`;
+  }
 }
+
+/** Valid color options for the spinner */
+type SpinnerColor = 'primary' | 'accent' | 'warn';

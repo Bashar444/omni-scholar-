@@ -150,4 +150,46 @@ export class AuthService {
       localStorage.removeItem('omni_scholar_token');
     }
   }
+
+  /**
+   * Check rate limit status
+   * TODO: Replace with actual API call when backend is integrated
+   */
+  checkRateLimit(): Observable<{ isLimited: boolean; resetTime?: number }> {
+    // Mock implementation - replace with actual API call
+    const mockRateLimit = {
+      isLimited: false,
+      resetTime: 0
+    };
+
+    // Read from localStorage to simulate persistence
+    if (isPlatformBrowser(this.platformId)) {
+      const storedLimit = localStorage.getItem('rate_limit');
+      if (storedLimit) {
+        const { limitTime } = JSON.parse(storedLimit);
+        if (limitTime > Date.now()) {
+          return of({
+            isLimited: true,
+            resetTime: limitTime - Date.now()
+          });
+        } else {
+          localStorage.removeItem('rate_limit');
+        }
+      }
+    }
+
+    return of(mockRateLimit);
+  }
+
+  /**
+   * Handle rate limit error (509)
+   * @param resetTime Time in milliseconds until rate limit resets
+   */
+  handleRateLimit(resetTime: number): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('rate_limit', JSON.stringify({
+        limitTime: Date.now() + resetTime
+      }));
+    }
+  }
 }

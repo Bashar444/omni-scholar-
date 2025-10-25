@@ -1,0 +1,84 @@
+# Octopus Deploy Configuration
+# Target: IIS Website
+
+variables:
+  Application:
+    websiteName: "OmniScholar"
+    applicationPool: "OmniScholarPool"
+    physicalPath: "C:\inetpub\wwwroot\OmniScholar"
+
+steps:
+  - step:
+      name: Stop Application Pool
+      action: Octopus.IIS.AppPool.Stop
+      properties:
+        applicationPoolName: #{Application.applicationPool}
+        
+  - step:
+      name: Deploy Website
+      action: Octopus.IIS.Deploy
+      properties:
+        webSiteName: #{Application.websiteName}
+        applicationPoolName: #{Application.applicationPool}
+        physicalPath: #{Application.physicalPath}
+        
+  - step:
+      name: Configure IIS
+      action: Octopus.Script.Run
+      properties:
+        script: |
+          Import-Module WebAdministration
+          
+          # Ensure application pool exists and is configured correctly
+          if(!(Test-Path IIS:\AppPools\#{Application.applicationPool})) {
+              New-WebAppPool -Name #{Application.applicationPool}
+          }
+          
+          Set-ItemProperty IIS:\AppPools\#{Application.applicationPool} -name "managedRuntimeVersion" -value "v4.0"
+          Set-ItemProperty IIS:\AppPools\#{Application.applicationPool} -name "startMode" -value "AlwaysRunning"
+          
+          # Configure website
+          if(!(Test-Path IIS:\Sites\#{Application.websiteName})) {
+              New-Website -Name #{Application.websiteName} -PhysicalPath #{Application.physicalPath} -ApplicationPool #{Application.applicationPool}
+          }
+          
+          # Configure HTTPS
+          $binding = Get-WebBinding -Name #{Application.websiteName} -Protocol "https"
+          if(!$binding) {
+              New-WebBinding -Name #{Application.websiteName} -Protocol "https" -Port 443 -SslFlags 1
+          }
+          
+  - step:
+      name: Start Application Pool
+      action: Octopus.IIS.AppPool.Start
+      properties:
+        applicationPoolName: #{Application.applicationPool}
+        
+  - step:
+      name: Verify Deployment
+      action: Octopus.Script.Run
+      properties:
+        script: |
+          $url = "https://#{Application.websiteName}"
+          $maxAttempts = 5
+          $attempt = 0
+          $success = $false
+          
+          do {
+              $attempt++
+              try {
+                  $response = Invoke-WebRequest -Uri $url -UseBasicParsing
+                  if($response.StatusCode -eq 200) {
+                      Write-Host "Website is responding successfully!"
+                      $success = $true
+                      break
+                  }
+              } catch {
+                  Write-Host "Attempt $attempt failed. Waiting before retry..."
+                  Start-Sleep -Seconds 10
+              }
+          } while ($attempt -lt $maxAttempts)
+          
+          if(!$success) {
+              throw "Website verification failed after $maxAttempts attempts"
+          }

@@ -187,6 +187,16 @@ export class GlobalKnowledgeBridgeComponent implements OnInit {
   }
 
   // Search and filter methods
+  updateSearch(value: string): void {
+    this.searchQuery.set(value);
+    this.searchPapers();
+  }
+
+  clearSearch(): void {
+    this.searchQuery.set('');
+    this.searchPapers();
+  }
+
   searchPapers(): void {
     const filters = {
       query: this.searchQuery(),

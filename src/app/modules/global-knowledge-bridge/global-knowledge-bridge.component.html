@@ -11,14 +11,14 @@
       </div>
       <div class="language-selector">
         <p-dropdown 
-          [(ngModel)]="selectedUserLanguage" 
+          [(ngModel)]="selectedUserLanguage()" 
           [options]="supportedLanguages" 
           optionLabel="name" 
           optionValue="code"
           [style]="{'width': '250px'}"
           placeholder="Select Your Language">
           <ng-template pTemplate="selectedItem" let-language>
-            <span>{{ language?.flag }} {{ language?.name }}</span>
+            <span>{{ language.flag }} {{ language.name }}</span>
           </ng-template>
           <ng-template pTemplate="item" let-language>
             <span>{{ language.flag }} {{ language.name }} ({{ language.nativeName }})</span>
@@ -90,8 +90,8 @@
               <input 
                 pInputText 
                 class="w-full" 
-                [(ngModel)]="searchQuery" 
-                (input)="searchPapers()" 
+                [ngModel]="searchQuery()" 
+                (ngModelChange)="updateSearch($event)" 
                 placeholder="Search across all languages..."
                 type="text">
               @if (searchQuery()) {
@@ -212,11 +212,11 @@
                     <div class="translation-quality">
                       <span class="quality-label">Translation Quality:</span>
                       @for (lang of paper.availableLanguages.slice(0, 3); track lang) {
-                        @if (paper.translationQuality[lang]) {
+                        @if (paper.translationQuality[lang]?.score !== undefined) {
                           <p-chip
                             class="quality-chip"
-                            [label]="getLanguageFlag(lang) + ' ' + paper.translationQuality[lang].score + '%'"
-                            [style]="{'background-color': getTranslationQualityColor(paper.translationQuality[lang].score)}">
+                            [label]="getLanguageFlag(lang) + ' ' + paper.translationQuality[lang]!.score + '%'"
+                            [style]="{'background-color': getTranslationQualityColor(paper.translationQuality[lang]!.score)}">
                           </p-chip>
                         }
                       }
