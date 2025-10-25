@@ -11,6 +11,10 @@ npm install --legacy-peer-deps --force --no-audit --no-fund
 echo "🔧 Installing Angular CLI globally..."
 npm install -g @angular/cli@16.2.0
 
+# Install Angular build tools explicitly
+echo "🔧 Installing Angular build tools..."
+npm install @angular-devkit/build-angular@16.2.0 @angular-devkit/architect@0.1602.0 @angular-devkit/core@16.2.0 @angular-devkit/schematics@16.2.0 @schematics/angular@16.2.0 --save-dev --legacy-peer-deps --force
+
 # Verify Angular CLI is available
 echo "✅ Verifying Angular CLI..."
 ng version

@@ -57,8 +57,12 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.0",
+    "@angular-devkit/architect": "^0.1602.0",
+    "@angular-devkit/core": "^16.2.0",
+    "@angular-devkit/schematics": "^16.2.0",
     "@angular/cli": "^16.2.0",
     "@angular/compiler-cli": "^16.2.0",
+    "@schematics/angular": "^16.2.0",
     "@types/jasmine": "~4.3.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^18.18.9",

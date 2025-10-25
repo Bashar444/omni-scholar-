@@ -13,14 +13,19 @@ npm install --legacy-peer-deps --force --no-audit --no-fund || {
     npm install --legacy-peer-deps --force --no-audit --no-fund || {
         echo "❌ Approach 2 failed, trying approach 3..."
         
-        echo "📦 Approach 3: Yarn fallback"
-        npm install -g yarn
-        yarn install --ignore-engines || {
-            echo "❌ All approaches failed, using minimal build..."
+        echo "📦 Approach 3: Install Angular build tools explicitly"
+        npm install @angular-devkit/build-angular@16.2.0 @angular-devkit/architect@0.1602.0 @angular-devkit/core@16.2.0 @angular-devkit/schematics@16.2.0 @schematics/angular@16.2.0 --save-dev --legacy-peer-deps --force || {
+            echo "❌ Approach 3 failed, trying approach 4..."
             
-            # Minimal build with just essential packages
-            npm install @angular/cli@16.2.0 --save-dev
-            npx ng build --configuration production
+            echo "📦 Approach 4: Yarn fallback"
+            npm install -g yarn
+            yarn install --ignore-engines || {
+                echo "❌ All approaches failed, using minimal build..."
+                
+                # Minimal build with just essential packages
+                npm install @angular/cli@16.2.0 @angular-devkit/build-angular@16.2.0 --save-dev
+                npx ng build --configuration production
+            }
         }
     }
 }
