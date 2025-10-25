@@ -1,5 +1,4 @@
 <div class="edu-forge-container">
-  <!-- Header -->
   <p-card class="header-card">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-3">
@@ -12,176 +11,43 @@
     </ng-template>
   </p-card>
 
-  <!-- User Stats Dashboard -->
-  <div class="stats-grid" *ngIf="userStats()">
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-book stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ userStats()!.coursesCompleted }}</div>
-          <div class="stat-label">Courses Completed</div>
-        </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-users stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ userStats()!.mentorshipSessions }}</div>
-          <div class="stat-label">Mentorship Sessions</div>
-        </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-certificate stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ userStats()!.certificatesEarned }}</div>
-          <div class="stat-label">Certificates</div>
-        </div>
-      </div>
-    </p-card>
-  </div>
-
-  <!-- Main Tabs -->
   <p-tabView>
-    <!-- Courses Tab -->
     <p-tabPanel header="Courses">
       <div class="tab-content">
-        <!-- Search and Filters -->
-        <p-card class="search-card">
-          <div class="search-section">
-            <div class="search-bar">
-              <input
-                pInputText
-                [(ngModel)]="searchQuery"
-                placeholder="Search courses..."
-                class="w-full"
-              />
-              <i class="pi pi-search search-icon"></i>
-            </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-book text-6xl mb-3"></i>
+            <h3>Learning Courses</h3>
+            <p>Discover and enroll in courses</p>
+            <p-button icon="pi pi-plus" label="Browse Courses" severity="primary"></p-button>
           </div>
         </p-card>
-
-        <!-- Loading State -->
-        <div class="loading-state" *ngIf="isLoading()">
-          <p-progressSpinner [style]="{ width: '50px', height: '50px' }"></p-progressSpinner>
-          <p>Loading courses...</p>
-        </div>
-
-        <!-- Courses Grid -->
-        <div class="courses-grid" *ngIf="!isLoading() && filteredCourses().length > 0">
-          <p-card *ngFor="let course of filteredCourses()" class="course-card">
-            <ng-template pTemplate="header">
-              <div class="course-header">
-                <h3>{{ course.title }}</h3>
-                <p-chip label="Featured" *ngIf="course.isFeatured" class="featured-chip"></p-chip>
-              </div>
-            </ng-template>
-
-            <div class="course-content">
-              <p>{{ course.description }}</p>
-              <div class="course-meta">
-                <span class="instructor">{{ course.instructor }}</span>
-                <span class="duration">{{ course.duration }}</span>
-                <span class="difficulty" [class]="'difficulty-' + course.difficulty">{{ course.difficulty }}</span>
-              </div>
-              
-              <div class="course-topics" *ngIf="course.topics.length > 0">
-                <p-chip *ngFor="let topic of course.topics.slice(0, 3)" [label]="topic"></p-chip>
-                <p-chip *ngIf="course.topics.length > 3" [label]="'+' + (course.topics.length - 3) + ' more'"></p-chip>
-              </div>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="course-actions">
-                <p-button icon="pi pi-eye" label="View" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-play" label="Enroll" severity="primary"></p-button>
-              </div>
-            </ng-template>
-          </p-card>
-        </div>
-
-        <!-- Empty State -->
-        <div class="empty-state" *ngIf="!isLoading() && filteredCourses().length === 0">
-          <i class="pi pi-book text-6xl text-gray-400 mb-4"></i>
-          <h3>No Courses Found</h3>
-          <p>Try adjusting your search criteria</p>
-        </div>
       </div>
     </p-tabPanel>
 
-    <!-- Mentors Tab -->
     <p-tabPanel header="Mentors">
       <div class="tab-content">
-        <div class="mentors-grid" *ngIf="filteredMentors().length > 0">
-          <p-card *ngFor="let mentor of filteredMentors()" class="mentor-card">
-            <ng-template pTemplate="header">
-              <div class="mentor-header">
-                <img [src]="mentor.avatar" [alt]="mentor.name" class="mentor-avatar">
-                <div class="mentor-info">
-                  <h3>{{ mentor.name }}</h3>
-                  <p>{{ mentor.title }}</p>
-                </div>
-                <p-chip label="Top Mentor" *ngIf="mentor.isFeatured" class="featured-chip"></p-chip>
-              </div>
-            </ng-template>
-
-            <div class="mentor-content">
-              <p>{{ mentor.bio }}</p>
-              <div class="mentor-expertise">
-                <p-chip *ngFor="let skill of mentor.expertise.slice(0, 3)" [label]="skill"></p-chip>
-              </div>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="mentor-actions">
-                <p-button icon="pi pi-eye" label="View Profile" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-user-plus" label="Request Session" severity="primary"></p-button>
-              </div>
-            </ng-template>
-          </p-card>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-users text-6xl mb-3"></i>
+            <h3>Find Mentors</h3>
+            <p>Connect with experienced mentors</p>
+            <p-button icon="pi pi-search" label="Find Mentors" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
 
-    <!-- Progress Tab -->
-    <p-tabPanel header="My Progress">
+    <p-tabPanel header="Progress">
       <div class="tab-content">
-        <div class="progress-grid" *ngIf="userProgress().length > 0">
-          <p-card *ngFor="let progress of userProgress()" class="progress-card">
-            <div class="progress-content">
-              <h3>{{ getCourseTitle(progress.courseId) }}</h3>
-              <div class="progress-bar">
-                <p-progressBar [value]="progress.completionPercentage"></p-progressBar>
-              </div>
-              <div class="progress-meta">
-                <span>{{ progress.completionPercentage }}% Complete</span>
-                <span class="certificate" *ngIf="progress.certificateEarned">
-                  <i class="pi pi-certificate"></i> Certificate Earned
-                </span>
-              </div>
-            </div>
-          </p-card>
-        </div>
-      </div>
-    </p-tabPanel>
-
-    <!-- Sessions Tab -->
-    <p-tabPanel header="Mentorship Sessions">
-      <div class="tab-content">
-        <div class="sessions-grid" *ngIf="mySessions().length > 0">
-          <p-card *ngFor="let session of mySessions()" class="session-card">
-            <div class="session-content">
-              <h3>{{ session.mentorName }}</h3>
-              <p>{{ session.topic }}</p>
-              <div class="session-meta">
-                <span class="date">{{ formatDateTime(session.scheduledAt) }}</span>
-                <span class="status" [class]="'status-' + session.status">{{ session.status }}</span>
-              </div>
-            </div>
-          </p-card>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-chart-line text-6xl mb-3"></i>
+            <h3>Learning Progress</h3>
+            <p>Track your learning journey</p>
+            <p-button icon="pi pi-eye" label="View Progress" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
   </p-tabView>

@@ -1,5 +1,4 @@
 <div class="meta-lab-container">
-  <!-- Header -->
   <p-card class="header-card">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-3">
@@ -12,89 +11,30 @@
     </ng-template>
   </p-card>
 
-  <!-- Statistics Dashboard -->
-  <div class="stats-grid" *ngIf="metrics()">
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-database stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ metrics()!.openDataPercentage.toFixed(1) }}%</div>
-          <div class="stat-label">Open Data</div>
-        </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-code stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ metrics()!.openCodePercentage.toFixed(1) }}%</div>
-          <div class="stat-label">Open Code</div>
-        </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-check-circle stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ metrics()!.preregisteredPercentage.toFixed(1) }}%</div>
-          <div class="stat-label">Preregistered</div>
-        </div>
-      </div>
-    </p-card>
-  </div>
-
-  <!-- Main Tabs -->
   <p-tabView>
-    <!-- Studies Tab -->
     <p-tabPanel header="Studies">
       <div class="tab-content">
-        <!-- Filters -->
-        <p-card class="filters-card">
-          <div class="filters-section">
-            <p-multiSelect
-              [options]="fields"
-              [(ngModel)]="selectedFields"
-              defaultLabel="Research Field"
-              optionLabel="name"
-              class="filter-field">
-            </p-multiSelect>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-microscope text-6xl mb-3"></i>
+            <h3>Research Studies</h3>
+            <p>Manage your research studies</p>
+            <p-button icon="pi pi-plus" label="Create Study" severity="primary"></p-button>
           </div>
         </p-card>
-
-        <!-- Studies Grid -->
-        <div class="studies-grid" *ngIf="studies().length > 0">
-          <p-card *ngFor="let study of studies()" class="study-card">
-            <div class="study-content">
-              <h3>{{ study.title }}</h3>
-              <p>{{ study.description }}</p>
-              <div class="study-meta">
-                <span class="status" [class]="'status-' + study.status">{{ study.status }}</span>
-                <span class="date">{{ formatDate(study.createdAt) }}</span>
-              </div>
-            </div>
-          </p-card>
-        </div>
       </div>
     </p-tabPanel>
 
-    <!-- Replications Tab -->
     <p-tabPanel header="Replications">
       <div class="tab-content">
-        <div class="replications-grid" *ngIf="replications().length > 0">
-          <p-card *ngFor="let replication of replications()" class="replication-card">
-            <div class="replication-content">
-              <h3>Replication of: {{ replication.originalStudy.title }}</h3>
-              <p class="team">{{ replication.replicatingTeam.join(', ') }}</p>
-              <p class="institution">{{ replication.institution }}</p>
-              <div class="replication-meta">
-                <span class="confidence" [class]="'confidence-' + replication.confidence">
-                  Confidence: {{ replication.confidence }}
-                </span>
-                <span class="status" [class]="'status-' + replication.status">{{ replication.status }}</span>
-              </div>
-            </div>
-          </p-card>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-refresh text-6xl mb-3"></i>
+            <h3>Study Replications</h3>
+            <p>Track replication studies</p>
+            <p-button icon="pi pi-plus" label="Start Replication" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
   </p-tabView>

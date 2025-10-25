@@ -1,5 +1,4 @@
 <div class="lab-sync-container">
-  <!-- Header -->
   <p-card class="header-card">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-3">
@@ -12,118 +11,43 @@
     </ng-template>
   </p-card>
 
-  <!-- Search Bar -->
-  <div class="search-section">
-    <div class="search-bar">
-      <input
-        pInputText
-        [(ngModel)]="searchQuery"
-        (ngModelChange)="onSearchChange()"
-        placeholder="Search papers, tasks, activities..."
-        class="w-full"
-      />
-      <i class="pi pi-search search-icon"></i>
-    </div>
-  </div>
-
-  <!-- Main Tabs -->
   <p-tabView>
-    <!-- Dashboard Tab -->
     <p-tabPanel header="Dashboard">
-      <div class="dashboard-content">
-        <!-- Analytics Cards -->
-        <div class="analytics-grid" *ngIf="analytics()">
-          <p-card class="stat-card">
-            <div class="stat-content">
-              <i class="pi pi-file stat-icon"></i>
-              <div class="stat-info">
-                <div class="stat-value">{{ analytics()!.totalPapers }}</div>
-                <div class="stat-label">Total Papers</div>
-              </div>
-            </div>
-          </p-card>
-
-          <p-card class="stat-card">
-            <div class="stat-content">
-              <i class="pi pi-book stat-icon"></i>
-              <div class="stat-info">
-                <div class="stat-value">{{ analytics()!.papersReadThisWeek }}</div>
-                <div class="stat-label">Read This Week</div>
-              </div>
-            </div>
-          </p-card>
-
-          <p-card class="stat-card">
-            <div class="stat-content">
-              <i class="pi pi-users stat-icon"></i>
-              <div class="stat-info">
-                <div class="stat-value">{{ analytics()!.teamMembers }}</div>
-                <div class="stat-label">Team Members</div>
-              </div>
-            </div>
-          </p-card>
-        </div>
-
-        <!-- Tasks Overview -->
-        <p-card class="tasks-card">
-          <ng-template pTemplate="header">
-            <h3 class="text-xl font-bold m-0">Tasks Overview</h3>
-          </ng-template>
-          <div class="task-breakdown">
-            <div class="task-stat">
-              <span class="task-label">To Do</span>
-              <span class="task-count">{{ analytics()!.tasksByStatus.todo }}</span>
-            </div>
-            <div class="task-stat">
-              <span class="task-label">In Progress</span>
-              <span class="task-count">{{ analytics()!.tasksByStatus.inProgress }}</span>
-            </div>
-            <div class="task-stat">
-              <span class="task-label">Completed</span>
-              <span class="task-count">{{ analytics()!.tasksByStatus.completed }}</span>
-            </div>
+      <div class="tab-content">
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-chart-bar text-6xl mb-3"></i>
+            <h3>Research Dashboard</h3>
+            <p>Overview of your research activities</p>
+            <p-button icon="pi pi-eye" label="View Dashboard" severity="primary"></p-button>
           </div>
         </p-card>
       </div>
     </p-tabPanel>
 
-    <!-- Papers Tab -->
     <p-tabPanel header="Papers">
       <div class="tab-content">
-        <div class="papers-grid" *ngIf="papers().length > 0">
-          <p-card *ngFor="let paper of papers()" class="paper-card">
-            <div class="paper-content">
-              <h3>{{ paper.title }}</h3>
-              <p>{{ paper.authors.join(', ') }}</p>
-              <div class="paper-meta">
-                <span class="date">{{ formatDate(paper.publicationDate) }}</span>
-                <span class="citations">{{ paper.citations }} citations</span>
-              </div>
-              <div class="paper-tags" *ngIf="paper.tags.length > 0">
-                <p-chip *ngFor="let tag of paper.tags" [label]="tag"></p-chip>
-              </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-file text-6xl mb-3"></i>
+            <h3>Research Papers</h3>
+            <p>Manage your paper collection</p>
+            <p-button icon="pi pi-plus" label="Add Paper" severity="primary"></p-button>
             </div>
           </p-card>
-        </div>
       </div>
     </p-tabPanel>
 
-    <!-- Tasks Tab -->
     <p-tabPanel header="Tasks">
       <div class="tab-content">
-        <div class="tasks-list" *ngIf="tasks().length > 0">
-          <p-card *ngFor="let task of tasks()" class="task-card">
-            <div class="task-content">
-              <h3>{{ task.title }}</h3>
-              <p>{{ task.description }}</p>
-              <div class="task-meta">
-                <span class="status" [class]="'status-' + task.status">{{ task.status }}</span>
-                <span class="assignee">{{ task.assignee }}</span>
-                <span class="due-date">{{ formatDate(task.dueDate) }}</span>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-check-square text-6xl mb-3"></i>
+            <h3>Research Tasks</h3>
+            <p>Track your research tasks</p>
+            <p-button icon="pi pi-plus" label="Add Task" severity="primary"></p-button>
               </div>
-            </div>
-          </p-card>
-        </div>
+            </p-card>
       </div>
     </p-tabPanel>
   </p-tabView>

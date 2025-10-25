@@ -1,156 +1,41 @@
 <div class="global-knowledge-bridge-container">
-  <!-- Header -->
   <p-card class="header-card">
-    <div class="header-content">
-      <div class="header-text">
-        <h1>
-          <i class="pi pi-globe mr-2"></i>
-          GlobalKnowledgeBridge
-        </h1>
-        <p>Cross-Language Research Platform</p>
-      </div>
-      <div class="language-selector">
-        <p-dropdown 
-          [ngModel]="selectedUserLanguage()"
-          (ngModelChange)="selectedUserLanguage.set($event)"
-          [options]="supportedLanguages" 
-          optionLabel="name" 
-          optionValue="code"
-          [style]="{'width': '250px'}"
-          placeholder="Select Your Language">
-          <ng-template pTemplate="selectedItem" let-language>
-            <span>{{ language.flag }} {{ language.name }}</span>
-          </ng-template>
-          <ng-template pTemplate="item" let-language>
-            <span>{{ language.flag }} {{ language.name }} ({{ language.nativeName }})</span>
-          </ng-template>
-        </p-dropdown>
-      </div>
-    </div>
-  </p-card>
-
-  <!-- Statistics Dashboard -->
-  <div class="stats-grid">
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-file stat-icon papers"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ paperStats().totalPapers }}</div>
-          <div class="stat-label">Papers</div>
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-3">
+        <i class="pi pi-globe text-2xl"></i>
+        <div>
+          <h2 class="mb-0">GlobalKnowledgeBridge</h2>
+          <p class="text-sm">Cross-Language Research Platform</p>
         </div>
       </div>
+    </ng-template>
     </p-card>
 
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-globe stat-icon languages"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ supportedLanguages.length }}</div>
-          <div class="stat-label">Languages</div>
+    <p-tabView>
+    <p-tabPanel header="Papers">
+        <div class="tab-content">
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-file text-6xl mb-3"></i>
+            <h3>Research Papers</h3>
+            <p>Discover papers in multiple languages</p>
+            <p-button icon="pi pi-search" label="Search Papers" severity="primary"></p-button>
+                  </div>
+                </p-card>
         </div>
-      </div>
-    </p-card>
+        </p-tabPanel>
 
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-users stat-icon collaborations"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ collaborationStats().activeCollaborations }}</div>
-          <div class="stat-label">Active Collaborations</div>
-        </div>
-      </div>
-    </p-card>
-  </div>
-
-  <!-- Main Content -->
-  <p-tabView>
-    <!-- Papers Tab -->
-    <p-tabPanel header="Research Papers">
-      <div class="tab-content">
-        <!-- Search and Filters -->
-        <p-card class="search-card">
-          <div class="search-section">
-            <div class="search-bar">
-              <input
-                pInputText
-                [(ngModel)]="searchQuery"
-                placeholder="Search papers..."
-                class="w-full"
-              />
-              <i class="pi pi-search search-icon"></i>
-            </div>
-          </div>
-        </p-card>
-
-        <!-- Loading State -->
-        <div class="loading-container" *ngIf="isLoading()">
-          <p-progressSpinner [style]="{'width': '48px', 'height': '48px'}"></p-progressSpinner>
-          <p>Loading papers...</p>
-        </div>
-
-        <!-- Papers Grid -->
-        <div class="papers-grid" *ngIf="!isLoading() && filteredPapers().length > 0">
-          <p-card *ngFor="let paper of filteredPapers()" class="paper-card">
-            <div class="paper-header">
-              <h3>{{ paper.title }}</h3>
-              <div class="paper-badges">
-                <p-chip *ngFor="let lang of paper.availableLanguages.slice(0, 3)" [label]="lang"></p-chip>
-                <p-chip *ngIf="paper.availableLanguages.length > 3" [label]="'+' + (paper.availableLanguages.length - 3)"></p-chip>
-                <p-chip icon="pi pi-lock-open" label="Open Access" *ngIf="paper.openAccess" class="open-access-chip"></p-chip>
-              </div>
-            </div>
-
-            <div class="paper-content">
-              <p class="paper-authors">{{ paper.authors.join(', ') }}</p>
-              <p class="paper-abstract">{{ paper.abstract }}</p>
-              
-              <div class="paper-meta">
-                <div class="meta-item">
-                  <i class="pi pi-calendar"></i>
-                  <span>{{ formatDate(paper.publicationDate) }}</span>
-                </div>
-                <div class="meta-item">
-                  <i class="pi pi-quote-left"></i>
-                  <span>{{ paper.citations }} citations</span>
-                </div>
-              </div>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="paper-actions">
-                <p-button icon="pi pi-eye" label="View" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-download" label="Download" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-share" label="Share" styleClass="p-button-text"></p-button>
-              </div>
-            </ng-template>
-          </p-card>
-        </div>
-
-        <!-- Empty State -->
-        <div class="empty-state" *ngIf="!isLoading() && filteredPapers().length === 0">
-          <i class="pi pi-file text-4xl"></i>
-          <h3>No Papers Found</h3>
-          <p>Try adjusting your search filters</p>
-        </div>
-      </div>
-    </p-tabPanel>
-
-    <!-- Collaborations Tab -->
     <p-tabPanel header="Collaborations">
-      <div class="tab-content">
-        <div class="collaborations-grid" *ngIf="filteredCollaborations().length > 0">
-          <p-card *ngFor="let collab of filteredCollaborations()" class="collaboration-card">
-            <div class="collaboration-content">
-              <h3>{{ collab.title }}</h3>
-              <p>{{ collab.description }}</p>
-              <div class="collaboration-meta">
-                <span class="status" [class]="'status-' + collab.status">{{ collab.status }}</span>
-                <span class="participants">{{ collab.participants.length }} participants</span>
+        <div class="tab-content">
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-users text-6xl mb-3"></i>
+            <h3>Global Collaborations</h3>
+            <p>Connect with researchers worldwide</p>
+            <p-button icon="pi pi-user-plus" label="Start Collaboration" severity="primary"></p-button>
               </div>
-            </div>
-          </p-card>
+            </p-card>
         </div>
-      </div>
-    </p-tabPanel>
-  </p-tabView>
+      </p-tabPanel>
+    </p-tabView>
 </div>

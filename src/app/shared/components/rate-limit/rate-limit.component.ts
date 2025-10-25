@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
@@ -8,13 +8,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 @Component({
   selector: 'app-rate-limit',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    CardModule,
-    ButtonModule,
-    ProgressBarModule
-  ],
+  imports: [CommonModule, RouterModule, CardModule, ButtonModule, ProgressBarModule],
   template: `
     <div class="rate-limit-container">
       <p-card>
@@ -24,18 +18,16 @@ import { ProgressBarModule } from 'primeng/progressbar';
           <p class="mb-4">
             You've reached the maximum number of requests. Please wait before trying again.
           </p>
-          
-          @if (remainingTime) {
-            <div class="mb-4">
-              <p-progressBar 
-                [value]="progressValue" 
-                [showValue]="false">
-              </p-progressBar>
-              <small class="block mt-2">
-                Time remaining: {{ formatTime(remainingTime) }}
-              </small>
-            </div>
-          }
+
+          <div class="mb-4" *ngIf="remainingTime">
+            <p-progressBar
+              [value]="progressValue"
+              [showValue]="false">
+            </p-progressBar>
+            <small class="block mt-2">
+              Time remaining: {{ formatTime(remainingTime) }}
+            </small>
+          </div>
 
           <div class="flex justify-content-center gap-2">
             <p-button
@@ -43,14 +35,13 @@ import { ProgressBarModule } from 'primeng/progressbar';
               icon="pi pi-home"
               [routerLink]="['/']">
             </p-button>
-            @if (redirectUrl) {
-              <p-button
-                label="Retry"
-                icon="pi pi-refresh"
-                [routerLink]="[redirectUrl]"
-                styleClass="p-button-secondary">
-              </p-button>
-            }
+            <p-button
+              *ngIf="redirectUrl"
+              label="Retry"
+              icon="pi pi-refresh"
+              [routerLink]="[redirectUrl]"
+              styleClass="p-button-secondary">
+            </p-button>
           </div>
         </div>
       </p-card>
@@ -61,61 +52,60 @@ import { ProgressBarModule } from 'primeng/progressbar';
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      min-height: 50vh;
       padding: 2rem;
-      background: var(--surface-ground);
     }
 
-    p-card {
-      max-width: 500px;
-      width: 100%;
+    .text-center {
+      text-align: center;
+    }
+
+    .text-warning {
+      color: var(--orange-500);
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1.5rem;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .block {
+      display: block;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .justify-content-center {
+      justify-content: center;
+    }
+
+    .gap-2 {
+      gap: 0.5rem;
     }
   `]
 })
 export class RateLimitComponent {
-  remainingTime = 0;
-  redirectUrl?: string;
-  progressValue = 0;
-  private interval: any;
+  @Input() remainingTime?: number;
+  @Input() redirectUrl?: string;
 
-  ngOnInit() {
-    // Get parameters from route
-    const params = new URLSearchParams(window.location.search);
-    this.remainingTime = parseInt(params.get('remainingTime') || '0', 10);
-    this.redirectUrl = params.get('redirectUrl') || undefined;
-
-    // Start countdown if time remaining
-    if (this.remainingTime > 0) {
-      const startTime = this.remainingTime;
-      this.updateProgress(startTime);
-      
-      this.interval = setInterval(() => {
-        this.remainingTime -= 1000;
-        this.updateProgress(startTime);
-        
-        if (this.remainingTime <= 0) {
-          clearInterval(this.interval);
-          if (this.redirectUrl) {
-            window.location.href = this.redirectUrl;
-          }
-        }
-      }, 1000);
-    }
+  get progressValue(): number {
+    if (!this.remainingTime) return 0;
+    // Assuming max time is 60 seconds for progress calculation
+    return Math.max(0, (this.remainingTime / 60) * 100);
   }
 
-  ngOnDestroy() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-  }
-
-  private updateProgress(startTime: number) {
-    this.progressValue = ((startTime - this.remainingTime) / startTime) * 100;
-  }
-
-  formatTime(ms: number): string {
-    const seconds = Math.floor((ms / 1000) % 60);
-    const minutes = Math.floor((ms / (1000 * 60)) % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 }

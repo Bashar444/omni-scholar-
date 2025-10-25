@@ -1,5 +1,4 @@
 <div class="data-verse-container">
-  <!-- Header -->
   <p-card class="header-card">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-3">
@@ -12,162 +11,43 @@
     </ng-template>
   </p-card>
 
-  <!-- Statistics Dashboard -->
-  <div class="stats-grid" *ngIf="statistics()">
-    <p-card class="stat-card">
-      <div class="flex flex-column align-items-center gap-2">
-        <i class="pi pi-chart-line text-2xl"></i>
-        <h3 class="mb-0">{{ statistics()!.totalCharts }}</h3>
-        <p class="mb-0">Total Charts</p>
-      </div>
-    </p-card>
-    <p-card class="stat-card primary">
-      <div class="flex flex-column align-items-center gap-2">
-        <i class="pi pi-th-large text-2xl"></i>
-        <h3 class="mb-0">{{ statistics()!.totalDashboards }}</h3>
-        <p class="mb-0">Dashboards</p>
-      </div>
-    </p-card>
-    <p-card class="stat-card accent">
-      <div class="flex flex-column align-items-center gap-2">
-        <i class="pi pi-book text-2xl"></i>
-        <h3 class="mb-0">{{ statistics()!.totalStories }}</h3>
-        <p class="mb-0">Data Stories</p>
-      </div>
-    </p-card>
-    <p-card class="stat-card success">
-      <div class="flex flex-column align-items-center gap-2">
-        <i class="pi pi-palette text-2xl"></i>
-        <h3 class="mb-0">{{ templates().length }}</h3>
-        <p class="mb-0">Templates</p>
-      </div>
-    </p-card>
-  </div>
-
-  <!-- Main Tabs -->
   <p-tabView>
-    <!-- Charts Tab -->
     <p-tabPanel header="Charts">
       <div class="tab-content">
-        <p-card class="search-card">
-          <div class="search-section">
-            <div class="search-bar">
-              <input
-                pInputText
-                [(ngModel)]="searchQuery"
-                placeholder="Search charts..."
-                class="w-full"
-              />
-              <i class="pi pi-search search-icon"></i>
-            </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-chart-line text-6xl mb-3"></i>
+            <h3>Data Visualization</h3>
+            <p>Create and manage your data visualizations</p>
+            <p-button icon="pi pi-plus" label="Create Chart" severity="primary"></p-button>
           </div>
         </p-card>
-
-        <!-- Loading State -->
-        <div class="loading-state" *ngIf="isLoading()">
-          <i class="pi pi-spinner pi-spin text-4xl"></i>
-          <p>Loading charts...</p>
-        </div>
-
-        <!-- Charts Grid -->
-        <div class="charts-grid" *ngIf="!isLoading() && filteredCharts().length > 0">
-          <p-card *ngFor="let chart of filteredCharts()" class="chart-card">
-            <ng-template pTemplate="header">
-              <div class="chart-header">
-                <h3>{{ chart.title }}</h3>
-                <div class="chart-badges">
-                  <span class="chip" [class]="'theme-' + chart.theme">{{ chart.theme }}</span>
-                  <span class="chip public-chip" *ngIf="chart.isPublic">Public</span>
-                </div>
-              </div>
-            </ng-template>
-
-            <div class="chart-content">
-              <div class="chart-description">
-                <p>{{ chart.description }}</p>
-              </div>
-
-              <div class="chart-tags" *ngIf="chart.tags.length > 0">
-                <p-chip *ngFor="let tag of chart.tags" [label]="tag"></p-chip>
-              </div>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="chart-actions">
-                <p-button icon="pi pi-eye" label="View" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-pencil" label="Edit" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-download" label="Export" styleClass="p-button-text"></p-button>
-              </div>
-            </ng-template>
-          </p-card>
-        </div>
-
-        <!-- Empty State -->
-        <div class="empty-state" *ngIf="!isLoading() && filteredCharts().length === 0">
-          <i class="pi pi-chart-line text-6xl mb-3"></i>
-          <h3>No Charts Found</h3>
-          <p>Create your first data visualization</p>
-          <p-button icon="pi pi-plus" label="Create Chart" severity="primary"></p-button>
-        </div>
       </div>
     </p-tabPanel>
 
-    <!-- Dashboards Tab -->
     <p-tabPanel header="Dashboards">
       <div class="tab-content">
-        <div class="dashboards-grid" *ngIf="dashboards().length > 0">
-          <p-card *ngFor="let dashboard of dashboards()" class="dashboard-card">
-            <ng-template pTemplate="header">
-              <div class="dashboard-header">
-                <h3>{{ dashboard.title }}</h3>
-                <div class="dashboard-badges">
-                  <span class="chip" [class]="'theme-' + dashboard.theme">{{ dashboard.theme }}</span>
-                </div>
-              </div>
-            </ng-template>
-
-            <div class="dashboard-content">
-              <p>{{ dashboard.description }}</p>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="dashboard-actions">
-                <p-button icon="pi pi-eye" label="View" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-pencil" label="Edit" styleClass="p-button-text"></p-button>
-              </div>
-            </ng-template>
-          </p-card>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-th-large text-6xl mb-3"></i>
+            <h3>Dashboards</h3>
+            <p>Build interactive dashboards</p>
+            <p-button icon="pi pi-plus" label="Create Dashboard" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
 
-    <!-- Stories Tab -->
-    <p-tabPanel header="Data Stories">
+    <p-tabPanel header="Stories">
       <div class="tab-content">
-        <div class="stories-list" *ngIf="stories().length > 0">
-          <p-card *ngFor="let story of stories()" class="story-card">
-            <ng-template pTemplate="header" *ngIf="story.coverImage">
-              <img [src]="story.coverImage" [alt]="story.title" class="p-card-image">
-            </ng-template>
-
-            <div class="story-content">
-              <h3>{{ story.title }}</h3>
-              <p>{{ story.description }}</p>
-              
-              <div class="story-tags" *ngIf="story.tags.length > 0">
-                <p-chip *ngFor="let tag of story.tags" [label]="tag"></p-chip>
-              </div>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="story-actions">
-                <p-button icon="pi pi-eye" label="View" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-pencil" label="Edit" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-upload" label="Publish" severity="primary" *ngIf="!story.isPublished"></p-button>
-              </div>
-            </ng-template>
-          </p-card>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-book text-6xl mb-3"></i>
+            <h3>Data Stories</h3>
+            <p>Tell compelling stories with your data</p>
+            <p-button icon="pi pi-plus" label="Create Story" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
   </p-tabView>

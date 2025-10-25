@@ -1,5 +1,4 @@
 <div class="omni-ai-container">
-  <!-- Header -->
   <p-card class="header-card">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-3">
@@ -12,74 +11,30 @@
     </ng-template>
   </p-card>
 
-  <!-- Main Tabs -->
   <p-tabView>
-    <!-- Chat Tab -->
     <p-tabPanel header="AI Chat">
       <div class="tab-content">
-        <!-- Chat Messages -->
-        <div class="chat-container">
-          <div class="messages-list" *ngIf="messages().length > 0">
-            <div *ngFor="let message of messages()" class="message" [class]="'message-' + message.type">
-              <div class="message-content">
-                <p>{{ message.content }}</p>
-                <span class="message-time">{{ formatTime(message.timestamp) }}</span>
-              </div>
-            </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-comments text-6xl mb-3"></i>
+            <h3>AI Assistant</h3>
+            <p>Chat with your AI research assistant</p>
+            <p-button icon="pi pi-comment" label="Start Chat" severity="primary"></p-button>
           </div>
-        </div>
-
-        <!-- Chat Input -->
-        <div class="chat-input">
-          <div class="input-group">
-            <input
-              pInputText
-              [(ngModel)]="currentMessage"
-              placeholder="Ask me anything about your research..."
-              class="w-full"
-            />
-            <p-button
-              icon="pi pi-send"
-              (onClick)="sendMessage()"
-              [disabled]="!currentMessage.trim()"
-              severity="primary">
-            </p-button>
-          </div>
-        </div>
+        </p-card>
       </div>
     </p-tabPanel>
 
-    <!-- Tools Tab -->
     <p-tabPanel header="AI Tools">
       <div class="tab-content">
-        <div class="tools-grid">
-          <p-card class="tool-card">
-            <div class="tool-content">
-              <i class="pi pi-file-edit text-3xl mb-3"></i>
-              <h3>Paper Summarizer</h3>
-              <p>Extract key insights from research papers</p>
-              <p-button label="Use Tool" severity="primary"></p-button>
-            </div>
-          </p-card>
-
-          <p-card class="tool-card">
-            <div class="tool-content">
-              <i class="pi pi-search text-3xl mb-3"></i>
-              <h3>Literature Search</h3>
-              <p>Find relevant papers using AI-powered search</p>
-              <p-button label="Use Tool" severity="primary"></p-button>
-            </div>
-          </p-card>
-
-          <p-card class="tool-card">
-            <div class="tool-content">
-              <i class="pi pi-chart-line text-3xl mb-3"></i>
-              <h3>Data Analysis</h3>
-              <p>Analyze your research data with AI assistance</p>
-              <p-button label="Use Tool" severity="primary"></p-button>
-            </div>
-          </p-card>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-cog text-6xl mb-3"></i>
+            <h3>AI Tools</h3>
+            <p>Access powerful AI research tools</p>
+            <p-button icon="pi pi-wrench" label="Use Tools" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
   </p-tabView>

@@ -1,5 +1,4 @@
 <div class="grant-ai-container">
-  <!-- Header -->
   <p-card class="header-card">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-3">
@@ -12,110 +11,30 @@
     </ng-template>
   </p-card>
 
-  <!-- Statistics Cards -->
-  <div class="stats-grid" *ngIf="statistics()">
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-search stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ statistics()!.totalGrants }}</div>
-          <div class="stat-label">Available Grants</div>
-        </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-check-circle stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ statistics()!.applicationsSubmitted }}</div>
-          <div class="stat-label">Applications Submitted</div>
-        </div>
-      </div>
-    </p-card>
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-dollar stat-icon"></i>
-        <div class="stat-info">
-          <div class="stat-value">${{ statistics()!.totalFunding.toLocaleString() }}</div>
-          <div class="stat-label">Total Funding</div>
-        </div>
-      </div>
-    </p-card>
-  </div>
-
-  <!-- Main Tabs -->
   <p-tabView>
-    <!-- Discover Tab -->
     <p-tabPanel header="Discover Grants">
       <div class="tab-content">
-        <!-- Loading State -->
-        <div class="loading-state" *ngIf="isLoading()">
-          <p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
-          <p>Finding grants that match your profile...</p>
-        </div>
-
-        <!-- Grants Grid -->
-        <div class="grants-grid" *ngIf="!isLoading() && matchedGrants().length > 0">
-          <p-card *ngFor="let grant of matchedGrants()" class="grant-card">
-            <div class="grant-header">
-              <h3>{{ grant.title }}</h3>
-              <div class="grant-badges">
-                <p-chip [label]="grant.agency" class="agency-chip"></p-chip>
-                <p-chip [label]="grant.deadline" class="deadline-chip"></p-chip>
-              </div>
-            </div>
-
-            <div class="grant-content">
-              <p>{{ grant.description }}</p>
-              <div class="grant-details">
-                <div class="detail-item">
-                  <i class="pi pi-dollar"></i>
-                  <span>Funding: ${{ grant.maxAmount.toLocaleString() }}</span>
-                </div>
-                <div class="detail-item">
-                  <i class="pi pi-calendar"></i>
-                  <span>Deadline: {{ formatDate(grant.deadline) }}</span>
-                </div>
-                <div class="detail-item">
-                  <i class="pi pi-tag"></i>
-                  <span>Category: {{ grant.category }}</span>
-                </div>
-              </div>
-            </div>
-
-            <ng-template pTemplate="footer">
-              <div class="grant-actions">
-                <p-button icon="pi pi-eye" label="View Details" styleClass="p-button-text"></p-button>
-                <p-button icon="pi pi-plus" label="Apply" severity="primary"></p-button>
-              </div>
-            </ng-template>
-          </p-card>
-        </div>
-
-        <!-- Empty State -->
-        <div class="empty-state" *ngIf="!isLoading() && matchedGrants().length === 0">
-          <i class="pi pi-search text-6xl mb-3"></i>
-          <h3>No Grants Found</h3>
-          <p>Try adjusting your search criteria</p>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-search text-6xl mb-3"></i>
+            <h3>Find Grants</h3>
+            <p>Discover funding opportunities</p>
+            <p-button icon="pi pi-search" label="Search Grants" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
 
-    <!-- Applications Tab -->
-    <p-tabPanel header="My Applications">
+    <p-tabPanel header="Applications">
       <div class="tab-content">
-        <div class="applications-grid" *ngIf="applications().length > 0">
-          <p-card *ngFor="let app of applications()" class="application-card">
-            <div class="application-content">
-              <h3>{{ app.grantTitle }}</h3>
-              <p>{{ app.status }}</p>
-              <div class="application-meta">
-                <span class="date">Submitted: {{ formatDate(app.submittedAt) }}</span>
-                <span class="status" [class]="'status-' + app.status">{{ app.status }}</span>
-              </div>
-            </div>
-          </p-card>
-        </div>
+        <p-card>
+          <div class="text-center p-4">
+            <i class="pi pi-file-edit text-6xl mb-3"></i>
+            <h3>My Applications</h3>
+            <p>Track your grant applications</p>
+            <p-button icon="pi pi-eye" label="View Applications" severity="primary"></p-button>
+          </div>
+        </p-card>
       </div>
     </p-tabPanel>
   </p-tabView>
