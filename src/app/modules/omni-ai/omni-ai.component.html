@@ -1,430 +1,86 @@
 <div class="omni-ai-container">
-  <!-- Left Sidebar: AI Tools -->
-  <aside class="tools-sidebar">
-    <div class="sidebar-header">
-      <i class="pi pi-wrench"></i>
-      <h3>AI Tools</h3>
-    </div>
+  <!-- Header -->
+  <p-card class="header-card">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-3">
+        <i class="pi pi-robot text-2xl"></i>
+        <div>
+          <h2 class="mb-0">OmniAI</h2>
+          <p class="text-sm">AI-Powered Research Assistant</p>
+        </div>
+      </div>
+    </ng-template>
+  </p-card>
 
-    <p-divider></p-divider>
-
-    <div class="tools-list">
-      @for (tool of availableTools(); track tool.id) {
-        <p-button
-          styleClass="p-button-outlined tool-button"
-          [class.active]="selectedTool()?.id === tool.id"
-          (click)="selectTool(tool)"
-          [pTooltip]="tool.description"
-          tooltipPosition="right">
-          <i class="pi {{ tool.icon }}"></i>
-          <span>{{ tool.name }}</span>
-        </p-button>
-      }
-    </div>
-
-    <div class="sidebar-footer">
-      <p-button (click)="startNewConversation()">
-        <i class="pi pi-plus"></i>
-        <span>New Chat</span>
-      </p-button>
-    </div>
-  </aside>
-
-  <!-- Main Chat Area -->
-  <main class="chat-main">
-    <p-tabView [(activeIndex)]="activeTabIndex" styleClass="omni-tabs">
-      <!-- Chat Tab -->
-      <p-tabPanel header="Chat">
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <i class="pi pi-comments"></i>
-            <span>Chat</span>
-          </div>
-        </ng-template>
-
-        <div class="chat-content">
-          <!-- Messages Container -->
-          <div class="messages-container" #chatContainer>
-            @if (messages().length === 0) {
-              <div class="welcome-message">
-                <i class="pi pi-android"></i>
-                <h2>Welcome to OmniAI!</h2>
-                <p>Your intelligent research assistant is ready to help.</p>
-                
-                <div class="quick-start">
-                  <h4>Quick Start:</h4>
-                  <div class="quick-chips">
-                    <p-button
-                      (onClick)="userInput = 'Help me summarize a research paper'; sendMessage()"
-                      label="Summarize Paper"
-                      styleClass="p-button-text p-button-rounded">
-                    </p-button>
-                    <p-button
-                      (onClick)="userInput = 'Generate research questions for my topic'; sendMessage()"
-                      label="Research Questions"
-                      styleClass="p-button-text p-button-rounded">
-                    </p-button>
-                    <p-button
-                      (onClick)="userInput = 'Help me with academic writing'; sendMessage()"
-                      label="Writing Help"
-                      styleClass="p-button-text p-button-rounded">
-                    </p-button>
-                    <p-button
-                      (onClick)="userInput = 'Format my citations in APA'; sendMessage()"
-                      label="Citation Help"
-                      styleClass="p-button-text p-button-rounded">
-                    </p-button>
-                  </div>
-                </div>
-
-                <div class="features-grid">
-                  <div class="feature-card">
-                    <i class="pi pi-file-edit"></i>
-                    <h4>Paper Analysis</h4>
-                    <p>Get concise summaries and key insights</p>
-                  </div>
-                  <div class="feature-card">
-                    <i class="pi pi-question-circle"></i>
-                    <h4>Research Support</h4>
-                    <p>Generate questions and hypotheses</p>
-                  </div>
-                  <div class="feature-card">
-                    <i class="pi pi-pencil"></i>
-                    <h4>Writing Assistant</h4>
-                    <p>Improve your academic writing</p>
-                  </div>
-                  <div class="feature-card">
-                    <i class="pi pi-list"></i>
-                    <h4>Citation Formatter</h4>
-                    <p>Format in APA, MLA, Chicago</p>
-                  </div>
-                </div>
+  <!-- Main Tabs -->
+  <p-tabView>
+    <!-- Chat Tab -->
+    <p-tabPanel header="AI Chat">
+      <div class="tab-content">
+        <!-- Chat Messages -->
+        <div class="chat-container">
+          <div class="messages-list" *ngIf="messages().length > 0">
+            <div *ngFor="let message of messages()" class="message" [class]="'message-' + message.type">
+              <div class="message-content">
+                <p>{{ message.content }}</p>
+                <span class="message-time">{{ formatTime(message.timestamp) }}</span>
               </div>
-            }
-
-            @for (message of messages(); track message.id) {
-              <div class="message-wrapper" [class.user-message]="message.sender === 'user'" [class.ai-message]="message.sender === 'ai'">
-                <div class="message-avatar">
-                  @if (message.sender === 'user') {
-                    <i class="pi pi-user"></i>
-                  } @else {
-                    <i class="pi pi-android"></i>
-                  }
-                </div>
-
-                <div class="message-content">
-                  <div class="message-header">
-                    <span class="message-sender">
-                      {{ message.sender === 'user' ? 'You' : 'OmniAI' }}
-                    </span>
-                    @if (message.toolUsed) {
-                      <p-chip styleClass="tool-chip">
-                        <div class="flex align-items-center gap-2">
-                          <i class="pi {{ message.toolUsed.icon }}"></i>
-                          <span>{{ message.toolUsed.name }}</span>
-                        </div>
-                      </p-chip>
-                    }
-                    <span class="message-time">{{ formatTime(message.timestamp) }}</span>
-                  </div>
-
-                  <div class="message-text" [innerHTML]="message.content | markdownToHtml"></div>
-                </div>
-              </div>
-            }
-
-            @if (isTyping()) {
-              <div class="message-wrapper ai-message typing-indicator">
-                <div class="message-avatar">
-                  <i class="pi pi-android"></i>
-                </div>
-                <div class="message-content">
-                  <div class="typing-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
-
-          <!-- Input Area -->
-          <div class="input-container">
-            @if (selectedTool()) {
-              <div class="active-tool-indicator flex align-items-center gap-2">
-                <i class="pi {{ selectedTool()!.icon }}"></i>
-                <span>Using: {{ selectedTool()!.name }}</span>
-                <p-button
-                  icon="pi pi-times"
-                  (onClick)="selectedTool.set(null)"
-                  pTooltip="Clear tool"
-                  styleClass="p-button-text p-button-rounded p-button-sm">
-                </p-button>
-              </div>
-            }
-
-            <div class="p-inputgroup">
-              <textarea 
-                pInputTextarea
-                [(ngModel)]="userInput"
-                (keydown.enter)="onEnterPress($any($event))"
-                rows="1"
-                placeholder="Ask me anything about your research..."
-                [disabled]="isTyping()">
-              </textarea>
-              <p-button
-                icon="pi pi-send"
-                (onClick)="sendMessage()"
-                [disabled]="!userInput.trim() || isTyping()"
-                pTooltip="Send message (Enter)">
-              </p-button>
-            </div>
-
-            <div class="input-hint">
-              <i class="pi pi-info-circle"></i>
-              <span>Press Enter to send, Shift+Enter for new line. Select an AI Tool for specialized assistance.</span>
             </div>
           </div>
         </div>
-      </p-tabPanel>
 
-      <!-- History Tab -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <i class="pi pi-history"></i>
-          <span>History</span>
-        </ng-template>
-
-        <div class="history-content">
-          <div class="history-header">
-            <h3>Chat History ({{ filteredSessions().length }} / {{ allSessions().length }})</h3>
-            <div class="header-actions flex gap-2">
-              <p-button
-                icon="pi pi-plus"
-                label="New Conversation"
-                (onClick)="startNewConversation()">
-              </p-button>
-              <p-button
-                icon="pi pi-download"
-                label="Export"
-                (onClick)="exportData()"
-                [disabled]="allSessions().length === 0">
-              </p-button>
-              <p-button
-                icon="pi pi-upload"
-                label="Import"
-                (onClick)="fileInput.click()"
-                styleClass="p-button-secondary">
-              </p-button>
-              <input #fileInput type="file" accept=".json" style="display: none" (change)="importData($event)">
-            </div>
-          </div>
-
-          <!-- Search Bar -->
-          <span class="p-input-icon-left">
-            <i class="pi pi-search"></i>
-            <input pInputText 
-                   [(ngModel)]="sessionSearchQuery" 
-                   (ngModelChange)="onSessionSearchChange()"
-                   placeholder="Search by title or message content..."
-                   class="w-full">
-          </span>
-          @if (sessionSearchQuery) {
+        <!-- Chat Input -->
+        <div class="chat-input">
+          <div class="input-group">
+            <input
+              pInputText
+              [(ngModel)]="currentMessage"
+              placeholder="Ask me anything about your research..."
+              class="w-full"
+            />
             <p-button
-              icon="pi pi-times"
-              (onClick)="clearSessionSearch()"
-              styleClass="p-button-text p-button-rounded">
+              icon="pi pi-send"
+              (onClick)="sendMessage()"
+              [disabled]="!currentMessage.trim()"
+              severity="primary">
             </p-button>
-          }
-
-          <!-- Loading Skeletons -->
-          @if (isLoadingSessions()) {
-            <div class="loading-sessions">
-              <app-chat-message-skeleton *ngFor="let item of [1,2,3,4,5]"></app-chat-message-skeleton>
-            </div>
-          }
-
-          @if (filteredSessions().length === 0 && sessionSearchQuery && !isLoadingSessions()) {
-            <div class="empty-state flex flex-column align-items-center gap-2">
-              <i class="pi pi-search-minus text-4xl"></i>
-              <p>No conversations match your search</p>
-              <p-button
-                label="Clear Search"
-                (onClick)="clearSessionSearch()"
-                styleClass="p-button-text">
-              </p-button>
-            </div>
-          }
-
-          @if (allSessions().length === 0 && !isLoadingSessions()) {
-            <div class="empty-state flex flex-column align-items-center gap-2">
-              <i class="pi pi-comments text-4xl"></i>
-              <p>No conversations yet</p>
-              <p-button
-                label="Start Your First Chat"
-                (onClick)="startNewConversation()">
-              </p-button>
-            </div>
-          }
-
-          <div class="sessions-list">
-            @for (session of filteredSessions(); track session.id) {
-              <p-card
-                styleClass="session-item mb-2"
-                [class.active-session]="currentSession()?.id === session.id"
-                (click)="switchSession(session.id)">
-                <div class="flex align-items-center gap-3">
-                  <i class="pi pi-comments text-xl"></i>
-                  <div class="flex-grow-1">
-                    <h4 class="m-0">{{ session.title }}</h4>
-                    <p class="text-sm text-500 m-0">
-                      {{ session.messages.length }} messages • {{ formatDate(session.updatedAt) }}
-                    </p>
-                  </div>
-                  <p-button
-                    icon="pi pi-trash"
-                    (onClick)="deleteSession(session.id, $event)"
-                    styleClass="p-button-text p-button-danger"
-                    pTooltip="Delete conversation">
-                  </p-button>
-                </div>
-              </p-card>
-            }
           </div>
         </div>
-      </p-tabPanel>
+      </div>
+    </p-tabPanel>
 
-      <!-- Settings Tab -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <i class="pi pi-cog"></i>
-          <span>Settings</span>
-        </ng-template>
+    <!-- Tools Tab -->
+    <p-tabPanel header="AI Tools">
+      <div class="tab-content">
+        <div class="tools-grid">
+          <p-card class="tool-card">
+            <div class="tool-content">
+              <i class="pi pi-file-edit text-3xl mb-3"></i>
+              <h3>Paper Summarizer</h3>
+              <p>Extract key insights from research papers</p>
+              <p-button label="Use Tool" severity="primary"></p-button>
+            </div>
+          </p-card>
 
-        <div class="settings-content">
-          @if (settings(); as currentSettings) {
-            <p-card>
-              <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                  <i class="pi pi-sliders-h"></i>
-                  <div>
-                    <h3>AI Configuration</h3>
-                    <p class="text-sm">Customize your AI assistant's behavior</p>
-                  </div>
-                </div>
-              </ng-template>
+          <p-card class="tool-card">
+            <div class="tool-content">
+              <i class="pi pi-search text-3xl mb-3"></i>
+              <h3>Literature Search</h3>
+              <p>Find relevant papers using AI-powered search</p>
+              <p-button label="Use Tool" severity="primary"></p-button>
+            </div>
+          </p-card>
 
-              <div class="settings-section">
-                <h4>Model Selection</h4>
-                <span class="p-float-label">
-                  <p-dropdown
-                    [options]="[
-                      {label: 'GPT-4 (Most Capable)', value: 'gpt-4'},
-                      {label: 'GPT-3.5 Turbo (Faster)', value: 'gpt-3.5-turbo'},
-                      {label: 'Claude 3 (Alternative)', value: 'claude-3'},
-                      {label: 'Local Model (Privacy)', value: 'local'}
-                    ]"
-                    [(ngModel)]="currentSettings.model"
-                    (onChange)="updateSettings(currentSettings)">
-                  </p-dropdown>
-                  <label>AI Model</label>
-                </span>
-                <small>Choose the AI model that best fits your needs</small>
-              </div>
-
-              <p-divider></p-divider>
-
-              <div class="settings-section">
-                <h4>Response Creativity</h4>
-                <div class="slider-container">
-                  <label>Temperature: {{ currentSettings.temperature.toFixed(2) }}</label>
-                  <p-slider
-                    [(ngModel)]="currentSettings.temperature"
-                    (onSlideEnd)="updateSettings(currentSettings)"
-                    [min]="0"
-                    [max]="1"
-                    [step]="0.1">
-                  </p-slider>
-                  <small>Lower = More focused, Higher = More creative</small>
-                </div>
-              </div>
-
-              <p-divider></p-divider>
-
-              <div class="settings-section">
-                <h4>Response Length</h4>
-                <span class="p-float-label">
-                  <p-inputNumber
-                    [(ngModel)]="currentSettings.maxTokens"
-                    (onInput)="updateSettings(currentSettings)"
-                    [min]="100"
-                    [max]="4000"
-                    [step]="100">
-                  </p-inputNumber>
-                  <label>Max Tokens</label>
-                </span>
-                <small>Maximum length of AI responses (100-4000)</small>
-              </div>
-
-              <p-divider></p-divider>
-
-              <div class="settings-section">
-                <h4>Advanced Options</h4>
-                <p-inputSwitch
-                  [(ngModel)]="currentSettings.streamResponse"
-                  (onChange)="updateSettings(currentSettings)">
-                </p-inputSwitch>
-                <label class="ml-2">Stream Responses (Show text as it's generated)</label>
-              </div>
-
-              <ng-template pTemplate="footer">
-                <div class="flex justify-content-between">
-                  <p-button
-                    icon="pi pi-refresh"
-                    label="Reset to Defaults"
-                    (onClick)="updateSettings({ model: 'gpt-4', temperature: 0.7, maxTokens: 2000, streamResponse: true })"
-                    styleClass="p-button-text">
-                  </p-button>
-                  <p-button
-                    icon="pi pi-download"
-                    label="Export Current Chat"
-                    (onClick)="exportCurrentChat()">
-                  </p-button>
-                </div>
-              </ng-template>
-            </p-card>
-
-            <p-card styleClass="info-card mt-4">
-              <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                  <i class="pi pi-info-circle"></i>
-                  <h3>About OmniAI</h3>
-                </div>
-              </ng-template>
-
-              <div class="info-content">
-                <p><strong>Version:</strong> 1.0.0 (Demo)</p>
-                <p><strong>Status:</strong> Simulated AI responses (no real API)</p>
-                <p><strong>Storage:</strong> LocalStorage (browser-based)</p>
-                <p><strong>Features:</strong></p>
-                <ul>
-                  <li>6 specialized AI tools for research tasks</li>
-                  <li>Chat history with session management</li>
-                  <li>Export conversations as Markdown</li>
-                  <li>Customizable AI settings</li>
-                  <li>Context-aware responses</li>
-                </ul>
-                <p class="demo-note flex align-items-center gap-2">
-                  <i class="pi pi-exclamation-triangle"></i>
-                  <span><strong>Demo Mode:</strong> This is a demonstration with simulated AI responses.
-                  Production version would integrate real AI APIs (OpenAI, Anthropic, or local models).</span>
-                </p>
-              </div>
-            </p-card>
-          }
+          <p-card class="tool-card">
+            <div class="tool-content">
+              <i class="pi pi-chart-line text-3xl mb-3"></i>
+              <h3>Data Analysis</h3>
+              <p>Analyze your research data with AI assistance</p>
+              <p-button label="Use Tool" severity="primary"></p-button>
+            </div>
+          </p-card>
         </div>
-      </p-tabPanel>
-    </p-tabView>
-  </main>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
 </div>

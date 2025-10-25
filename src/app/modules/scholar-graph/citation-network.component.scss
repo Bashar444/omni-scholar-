@@ -84,174 +84,84 @@
   max-width: 300px;
 }
 
-  .header-icon {
-    font-size: 4rem;
-    width: 4rem;
-    height: 4rem;
-    transition: all 0.3s ease;
+.header-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  transition: all 0.3s ease;
+}
+
+.header-text {
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
   }
 
-  .header-text {
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 600;
-    }
-
-    p {
-      margin: 0.5rem 0 0;
-      font-size: 1rem;
-      opacity: 0.9;
-    }
+  p {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    opacity: 0.9;
   }
+}
 
-  // Controls Card
-  :host ::ng-deep {
-    .p-card {
-      background: var(--surface-card);
-      border-radius: var(--border-radius);
-      box-shadow: var(--card-shadow);
-      
-      .controls-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-      }
-
-      .control-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-
-        label {
-          font-weight: 600;
-          font-size: 0.875rem;
-          color: var(--text-secondary-color);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .build-controls {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-
-          .p-dropdown, .p-button {
-            width: 100%;
-          }
-        }
-
-        .layout-options {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-
-          .p-button.p-highlight {
-            background: var(--primary-100);
-            color: var(--primary-900);
-            border-color: var(--primary-200);
-            transition: all 0.2s ease;
-          }
-        }
-
-          .display-options {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-
-            .slider-control {
-              display: flex;
-              align-items: center;
-              gap: 1rem;
-              
-              .pi {
-                font-size: 1.25rem;
-                color: var(--text-secondary-color);
-                transition: color 0.2s ease;
-              }
-
-              .p-slider {
-                flex: 1;
-              }
-            }
-
-            .export-buttons {
-              display: flex;
-              gap: 0.5rem;
-
-              .p-button {
-                transition: transform 0.2s ease;
-                
-                &:hover {
-                  transform: translateY(-2px);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+.svg-container {
+  flex: 1;
+  min-height: 600px;
+  border-radius: var(--border-radius);
+  background: var(--surface-card);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  cursor: grab;
+  transition: box-shadow 0.3s ease;
+  
+  &:active {
+    cursor: grabbing;
+    box-shadow: var(--card-shadow-inset);
   }
+  
+  svg {
+    width: 100%;
+    height: 100%;
 
-  // Network Visualization
-  .svg-container {
-    flex: 1;
-    min-height: 600px;
-    border-radius: var(--border-radius);
-    background: var(--surface-card);
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
-    cursor: grab;
-    transition: box-shadow 0.3s ease;
-    
-    &:active {
-      cursor: grabbing;
-      box-shadow: var(--card-shadow-inset);
+    .link {
+      stroke: var(--surface-500);
+      stroke-opacity: 0.6;
+      transition: stroke-opacity 0.3s;
     }
-    
-    svg {
-      width: 100%;
-      height: 100%;
 
-      .link {
-        stroke: var(--surface-500);
-        stroke-opacity: 0.6;
-        transition: stroke-opacity 0.3s;
+    .node {
+      stroke: var(--surface-0);
+      stroke-width: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.center {
+        fill: var(--primary-color);
       }
 
-      .node {
-        stroke: var(--surface-0);
-        stroke-width: 2px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &.center {
-          fill: var(--primary-color);
-        }
-
-        &.highlighted {
-          fill: var(--warning-color);
-        }
-
-        &:not(.center):not(.highlighted) {
-          fill: var(--primary-300);
-        }
-
-        &:hover {
-          stroke: var(--primary-color);
-          stroke-width: 3px;
-          transform: scale(1.1);
-        }
+      &.highlighted {
+        fill: var(--warning-color);
       }
 
-      .label {
-        fill: var(--text-color);
-        font-size: 0.625rem;
-        pointer-events: none;
-        user-select: none;
-        font-family: var(--font-family);
-        transition: opacity 0.2s ease;
+      &:not(.center):not(.highlighted) {
+        fill: var(--primary-300);
       }
+
+      &:hover {
+        stroke: var(--primary-color);
+        stroke-width: 3px;
+        transform: scale(1.1);
+      }
+    }
+
+    .label {
+      fill: var(--text-color);
+      font-size: 0.625rem;
+      pointer-events: none;
+      user-select: none;
+      font-family: var(--font-family);
+      transition: opacity 0.2s ease;
     }
   }
 }
@@ -286,12 +196,6 @@
       }
     }
 
-    .p-card {
-      .controls-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     .svg-container {
       min-height: 400px;
     }
@@ -310,7 +214,7 @@
       }
     }
 
-  .svg-container {
+    .svg-container {
       min-height: 300px;
     }
   }

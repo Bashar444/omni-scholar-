@@ -55,393 +55,102 @@
       <div class="stat-content">
         <i class="pi pi-users stat-icon collaborations"></i>
         <div class="stat-info">
-          <div class="stat-value">{{ collaborationStats().totalCollaborations }}</div>
-          <div class="stat-label">Collaborations</div>
-        </div>
-      </div>
-    </p-card>
-
-    <p-card class="stat-card">
-      <div class="stat-content">
-        <i class="pi pi-star-fill stat-icon quality"></i>
-        <div class="stat-info">
-          <div class="stat-value">{{ paperStats().averageTranslationQuality | number:'1.1-1' }}</div>
-          <div class="stat-label">Avg. Quality</div>
+          <div class="stat-value">{{ collaborationStats().activeCollaborations }}</div>
+          <div class="stat-label">Active Collaborations</div>
         </div>
       </div>
     </p-card>
   </div>
 
-  <!-- Main Content Tabs -->
-  <p-card class="content-card">
-    <p-tabView>
-      <!-- Multilingual Papers Tab -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <i class="pi pi-file mr-2"></i>
-          <span>Research Papers</span>
-          <span class="tab-count">{{ papers().length }}</span>
-        </ng-template>
-
-        <div class="tab-content">
-          <!-- Search and Filter Toolbar -->
-          <div class="toolbar">
-            <span class="p-input-icon-left p-input-icon-right w-full">
-              <i class="pi pi-search"></i>
-              <input 
-                pInputText 
-                class="w-full" 
-                [ngModel]="searchQuery()" 
-                (ngModelChange)="updateSearch($event)" 
-                placeholder="Search across all languages..."
-                type="text">
-              @if (searchQuery()) {
-                <i class="pi pi-times cursor-pointer" (click)="clearSearch()"></i>
-              }
-            </span>
-
-            <p-multiSelect 
-              [(ngModel)]="selectedLanguages" 
-              [options]="supportedLanguages"
-              (onChange)="searchPapers()"
-              optionLabel="name" 
-              optionValue="code"
-              placeholder="Select Languages"
-              [style]="{'minWidth': '200px'}"
-              display="chip">
-              <ng-template let-language pTemplate="item">
-                <span>{{ language.flag }} {{ language.name }}</span>
-              </ng-template>
-            </p-multiSelect>
-
-            <p-multiSelect 
-              [(ngModel)]="selectedFields"
-              [options]="researchFields"
-              (onChange)="searchPapers()"
-              placeholder="Select Fields"
-              [style]="{'minWidth': '200px'}"
-              display="chip">
-            </p-multiSelect>
-
-            <p-multiSelect 
-              [(ngModel)]="selectedRegions"
-              [options]="geographicRegions"
-              (onChange)="searchPapers()"
-              placeholder="Select Regions"
-              [style]="{'minWidth': '200px'}"
-              display="chip">
-            </p-multiSelect>
+  <!-- Main Content -->
+  <p-tabView>
+    <!-- Papers Tab -->
+    <p-tabPanel header="Research Papers">
+      <div class="tab-content">
+        <!-- Search and Filters -->
+        <p-card class="search-card">
+          <div class="search-section">
+            <div class="search-bar">
+              <input
+                pInputText
+                [(ngModel)]="searchQuery"
+                placeholder="Search papers..."
+                class="w-full"
+              />
+              <i class="pi pi-search search-icon"></i>
+            </div>
           </div>
+        </p-card>
 
-          <!-- Loading State -->
-          @if (isLoading()) {
-            <div class="loading-container">
-              <p-progressSpinner [style]="{'width': '48px', 'height': '48px'}"></p-progressSpinner>
-              <p>Loading papers...</p>
-            </div>
-          } @else if (filteredPapers().length === 0) {
-            <div class="empty-state">
-              <i class="pi pi-file text-4xl"></i>
-              <h3>No Papers Found</h3>
-              <p>Try adjusting your search filters</p>
-              <p-button 
-                (click)="clearSearch()" 
-                icon="pi pi-refresh"
-                label="Clear Filters">
-              </p-button>
-            </div>
-          } @else {
-            <div class="papers-grid">
-              @for (paper of filteredPapers(); track paper.id) {
-                <p-card class="paper-card">
-                  <div class="paper-header">
-                    <div class="language-badges">
-                      @for (lang of paper.availableLanguages.slice(0, 5); track lang) {
-                        <p-chip
-                          [label]="getLanguageFlag(lang)"
-                          [pTooltip]="getLanguageName(lang)"
-                          class="language-chip">
-                        </p-chip>
-                      }
-                      @if (paper.availableLanguages.length > 5) {
-                        <p-chip
-                          [label]="'+' + (paper.availableLanguages.length - 5)"
-                          class="language-chip">
-                        </p-chip>
-                      }
-                    </div>
-
-                    @if (paper.openAccess) {
-                      <p-chip icon="pi pi-lock-open" label="Open Access" class="open-access-chip"></p-chip>
-                    }
-                  </div>
-
-                  <div class="paper-content">
-                    <h3>{{ getPaperTitle(paper) }}</h3>
-                    <p class="original-language">Original: {{ getLanguageFlag(paper.originalLanguage) }} {{ getLanguageName(paper.originalLanguage) }}</p>
-                    <p class="abstract">{{ truncateText(getPaperAbstract(paper), 200) }}</p>
-
-                    <div class="paper-meta">
-                      <div class="meta-item">
-                        <i class="pi pi-tag"></i>
-                        <span>{{ paper.field }}</span>
-                      </div>
-                      <div class="meta-item">
-                        <i class="pi pi-globe"></i>
-                        <span>{{ paper.regions.join(', ') }}</span>
-                      </div>
-                      <div class="meta-item">
-                        <i class="pi pi-calendar"></i>
-                        <span>{{ formatDate(paper.publicationDate) }}</span>
-                      </div>
-                      <div class="meta-item">
-                        <i class="pi pi-quote-left"></i>
-                        <span>{{ paper.citations }} citations</span>
-                      </div>
-                    </div>
-
-                    <div class="authors">
-                      <strong>Authors:</strong>
-                      @for (author of paper.authors.slice(0, 3); track author.id) {
-                        <span class="author-name">{{ author.originalName }}</span>
-                      }
-                      @if (paper.authors.length > 3) {
-                        <span class="author-more">+{{ paper.authors.length - 3 }} more</span>
-                      }
-                    </div>
-
-                    <div class="translation-quality">
-                      <span class="quality-label">Translation Quality:</span>
-                      @for (lang of paper.availableLanguages.slice(0, 3); track lang) {
-                        @if (paper.translationQuality[lang]?.score !== undefined) {
-                          <p-chip
-                            class="quality-chip"
-                            [label]="getLanguageFlag(lang) + ' ' + paper.translationQuality[lang]!.score + '%'"
-                            [style]="{'background-color': getTranslationQualityColor(paper.translationQuality[lang]!.score)}">
-                          </p-chip>
-                        }
-                      }
-                    </div>
-                  </div>
-
-                  <div class="paper-actions">
-                    <p-button icon="pi pi-eye" label="View" (onClick)="viewPaper(paper)"></p-button>
-                    <p-menu #menu [popup]="true" [model]="translateMenuItems()"></p-menu>
-                    <p-button icon="pi pi-language" label="Translate" (onClick)="menu.toggle($event)"></p-button>
-                    <p-button icon="pi pi-download" label="Download" (onClick)="downloadPaper(paper)"></p-button>
-                  </div>
-                </p-card>
-              }
-            </div>
-          }
+        <!-- Loading State -->
+        <div class="loading-container" *ngIf="isLoading()">
+          <p-progressSpinner [style]="{'width': '48px', 'height': '48px'}"></p-progressSpinner>
+          <p>Loading papers...</p>
         </div>
-        </p-tabPanel>
 
-      <!-- Global Collaborations Tab -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <i class="pi pi-users mr-2"></i>
-          <span>Collaborations</span>
-          <p-badge [value]="collaborations().length.toString()" class="ml-2"></p-badge>
-        </ng-template>
-
-        <div class="tab-content">
-          <div class="toolbar">
-            <span class="p-input-icon-left w-full">
-              <i class="pi pi-search"></i>
-              <input 
-                pInputText 
-                class="w-full" 
-                [(ngModel)]="searchQuery" 
-                placeholder="Search by title or leader..." 
-                type="text">
-            </span>
-            <p-button 
-              icon="pi pi-plus"
-              label="Create Collaboration"
-              (onClick)="createCollaboration()"
-              severity="primary">
-            </p-button>
-          </div>
-
-          @if (filteredCollaborations().length === 0) {
-            <div class="empty-state">
-              <i class="pi pi-users text-4xl"></i>
-              <h3>No Collaborations Found</h3>
-              <p>Start a new global research collaboration</p>
-              <p-button 
-                icon="pi pi-plus"
-                label="Create Collaboration"
-                (onClick)="createCollaboration()"
-                severity="primary">
-              </p-button>
+        <!-- Papers Grid -->
+        <div class="papers-grid" *ngIf="!isLoading() && filteredPapers().length > 0">
+          <p-card *ngFor="let paper of filteredPapers()" class="paper-card">
+            <div class="paper-header">
+              <h3>{{ paper.title }}</h3>
+              <div class="paper-badges">
+                <p-chip *ngFor="let lang of paper.availableLanguages.slice(0, 3)" [label]="lang"></p-chip>
+                <p-chip *ngIf="paper.availableLanguages.length > 3" [label]="'+' + (paper.availableLanguages.length - 3)"></p-chip>
+                <p-chip icon="pi pi-lock-open" label="Open Access" *ngIf="paper.openAccess" class="open-access-chip"></p-chip>
+              </div>
             </div>
-          } @else {
-            <div class="collaborations-list">
-              @for (collab of filteredCollaborations(); track collab.id) {
-                <p-card class="collaboration-card">
-                  <div class="collaboration-header">
-                    <div class="collab-title">
-                      <h3>{{ getCollaborationTitle(collab) }}</h3>
-                      <p-chip [label]="collab.status" [style]="{'background-color': getCollaborationStatusColor(collab.status)}" class="status-chip"></p-chip>
-                    </div>
-                    <div class="language-badges">
-                      @for (lang of collab.languages.slice(0, 5); track lang) {
-                        <p-chip class="language-chip" [label]="getLanguageFlag(lang)" [pTooltip]="getLanguageName(lang)"></p-chip>
-                      }
-                    </div>
-                  </div>
 
-                  <div class="collaboration-body">
-                    <p class="description">{{ truncateText(getCollaborationDescription(collab), 150) }}</p>
-
-                    <div class="collab-meta">
-                      <div class="meta-row">
-                        <i class="pi pi-user"></i>
-                        <span><strong>Leader:</strong> {{ collab.leader.name }} ({{ collab.leader.country }})</span>
-                      </div>
-                      <div class="meta-row">
-                        <i class="pi pi-users"></i>
-                        <span><strong>Team Size:</strong> {{ collab.members.length + 1 }} members</span>
-                      </div>
-                      <div class="meta-row">
-                        <i class="pi pi-tag"></i>
-                        <span><strong>Field:</strong> {{ collab.field }}</span>
-                      </div>
-                      <div class="meta-row">
-                        <i class="pi pi-globe"></i>
-                        <span><strong>Regions:</strong> {{ collab.regions.join(', ') }}</span>
-                      </div>
-                      <div class="meta-row">
-                        <i class="pi pi-calendar"></i>
-                        <span><strong>Started:</strong> {{ formatDate(collab.startDate) }}</span>
-                      </div>
-                    </div>
-
-                    <div class="objectives">
-                      <strong>Objectives:</strong>
-                      <ul>
-                        @for (objective of collab.objectives.slice(0, 3); track objective) {
-                          <li>{{ objective }}</li>
-                        }
-                      </ul>
-                    </div>
-
-                    <div class="tags">
-                      @for (tag of collab.tags; track tag) {
-                        <p-chip class="tag-chip" [label]="tag"></p-chip>
-                      }
-                    </div>
-                  </div>
-
-                  <div class="collaboration-actions">
-                    <p-button icon="pi pi-eye" label="View Details" (onClick)="viewCollaboration(collab)"></p-button>
-                    @if (collab.status === 'active' || collab.status === 'planning') {
-                      <p-button icon="pi pi-user-plus" label="Join Collaboration" (onClick)="joinCollaboration(collab)" severity="primary"></p-button>
-                    }
-                  </div>
-                </p-card>
-              }
+            <div class="paper-content">
+              <p class="paper-authors">{{ paper.authors.join(', ') }}</p>
+              <p class="paper-abstract">{{ paper.abstract }}</p>
+              
+              <div class="paper-meta">
+                <div class="meta-item">
+                  <i class="pi pi-calendar"></i>
+                  <span>{{ formatDate(paper.publicationDate) }}</span>
+                </div>
+                <div class="meta-item">
+                  <i class="pi pi-quote-left"></i>
+                  <span>{{ paper.citations }} citations</span>
+                </div>
+              </div>
             </div>
-          }
+
+            <ng-template pTemplate="footer">
+              <div class="paper-actions">
+                <p-button icon="pi pi-eye" label="View" styleClass="p-button-text"></p-button>
+                <p-button icon="pi pi-download" label="Download" styleClass="p-button-text"></p-button>
+                <p-button icon="pi pi-share" label="Share" styleClass="p-button-text"></p-button>
+              </div>
+            </ng-template>
+          </p-card>
         </div>
-        </p-tabPanel>
 
-      <!-- Language Statistics Tab -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <i class="pi pi-chart-bar mr-2"></i>
-          <span>Statistics</span>
-        </ng-template>
-
-        <div class="tab-content">
-          <div class="statistics-grid">
-            <!-- Papers by Language -->
-            <p-card class="stats-card">
-              <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                  <i class="pi pi-globe"></i>
-                  <span>Papers by Language</span>
-                </div>
-              </ng-template>
-              <div class="stat-list">
-                @for (entry of paperStats().byLanguage | keyvalue; track entry.key) {
-                  <div class="stat-row">
-                    <span class="stat-label">
-                      {{ entry.key }}
-                    </span>
-                    <p-badge [value]="entry.value.toString()" severity="info"></p-badge>
-                  </div>
-                }
-              </div>
-            </p-card>
-
-            <!-- Papers by Field -->
-            <p-card class="stats-card">
-              <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                  <i class="pi pi-tag"></i>
-                  <span>Papers by Field</span>
-                </div>
-              </ng-template>
-              <div class="stat-list">
-                @for (entry of paperStats().byField | keyvalue; track entry.key) {
-                  <div class="stat-row">
-                    <span class="stat-label">{{ entry.key }}</span>
-                    <p-badge [value]="entry.value.toString()" severity="info"></p-badge>
-                  </div>
-                }
-              </div>
-            </p-card>
-
-            <!-- Papers by Region -->
-            <p-card class="stats-card">
-              <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                  <i class="pi pi-map"></i>
-                  <span>Papers by Region</span>
-                </div>
-              </ng-template>
-              <div class="stat-list">
-                @for (entry of paperStats().byRegion | keyvalue; track entry.key) {
-                  <div class="stat-row">
-                    <span class="stat-label">{{ entry.key }}</span>
-                    <p-badge [value]="entry.value.toString()" severity="info"></p-badge>
-                  </div>
-                }
-              </div>
-            </p-card>
-
-            <!-- Collaboration Statistics -->
-            <p-card class="stats-card">
-              <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                  <i class="pi pi-users"></i>
-                  <span>Collaboration Stats</span>
-                </div>
-              </ng-template>
-              <div class="stat-list">
-                <div class="stat-row">
-                  <span class="stat-label">Total Collaborations</span>
-                  <p-badge [value]="collaborationStats().totalCollaborations.toString()" severity="info"></p-badge>
-                </div>
-                <div class="stat-row">
-                  <span class="stat-label">Active</span>
-                  <p-badge [value]="collaborationStats().activeCollaborations.toString()" severity="success"></p-badge>
-                </div>
-                <div class="stat-row">
-                  <span class="stat-label">Average Team Size</span>
-                  <p-badge [value]="((collaborationStats().averageTeamSize) || 0) | number:'1.1-1'" severity="info"></p-badge>
-                </div>
-                <div class="stat-row">
-                  <span class="stat-label">Open Access Rate</span>
-                  <p-badge [value]="(paperStats().openAccessPercentage | number:'1.0-0') + '%'" severity="warning"></p-badge>
-                </div>
-              </div>
-            </p-card>
-          </div>
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!isLoading() && filteredPapers().length === 0">
+          <i class="pi pi-file text-4xl"></i>
+          <h3>No Papers Found</h3>
+          <p>Try adjusting your search filters</p>
         </div>
-      </p-tabPanel>
-    </p-tabView>
-  </p-card>
+      </div>
+    </p-tabPanel>
+
+    <!-- Collaborations Tab -->
+    <p-tabPanel header="Collaborations">
+      <div class="tab-content">
+        <div class="collaborations-grid" *ngIf="filteredCollaborations().length > 0">
+          <p-card *ngFor="let collab of filteredCollaborations()" class="collaboration-card">
+            <div class="collaboration-content">
+              <h3>{{ collab.title }}</h3>
+              <p>{{ collab.description }}</p>
+              <div class="collaboration-meta">
+                <span class="status" [class]="'status-' + collab.status">{{ collab.status }}</span>
+                <span class="participants">{{ collab.participants.length }} participants</span>
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
 </div>

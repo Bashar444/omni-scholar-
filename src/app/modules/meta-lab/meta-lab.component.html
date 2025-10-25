@@ -1,497 +1,100 @@
 <div class="meta-lab-container">
   <!-- Header -->
-  <p-card styleClass="header-card">
+  <p-card class="header-card">
     <ng-template pTemplate="header">
-      <div class="flex align-items-center gap-2">
-        <i class="pi pi-flask"></i>
+      <div class="flex align-items-center gap-3">
+        <i class="pi pi-flask text-2xl"></i>
         <div>
-          <h2>MetaLab</h2>
-          <p>Reproducibility & Replication Tracker</p>
+          <h2 class="mb-0">MetaLab</h2>
+          <p class="text-sm">Open Science & Reproducibility Platform</p>
         </div>
       </div>
     </ng-template>
   </p-card>
 
-  <!-- Metrics Dashboard -->
-  @if (metrics()) {
-    <div class="metrics-grid">
-      <p-card styleClass="metric-card">
-        <div class="metric-content">
-          <i class="pi pi-book"></i>
-          <h3>{{ metrics()!.totalStudies }}</h3>
-          <p>Total Studies</p>
-        </div>
-      </p-card>
-      <p-card styleClass="metric-card success">
-        <div class="metric-content">
-          <i class="pi pi-check-circle"></i>
-          <h3>{{ metrics()!.replicatedStudies }}</h3>
-          <p>Successfully Replicated</p>
-        </div>
-      </p-card>
-      <p-card styleClass="metric-card warning">
-        <div class="metric-content">
-          <i class="pi pi-times-circle"></i>
-          <h3>{{ metrics()!.failedReplications }}</h3>
-          <p>Failed Replications</p>
-        </div>
-      </p-card>
-      <p-card styleClass="metric-card primary">
-        <div class="metric-content">
-          <i class="pi pi-chart-line"></i>
-          <h3>{{ metrics()!.averageReproducibilityScore.toFixed(1) }}%</h3>
-          <p>Avg Reproducibility</p>
-        </div>
-      </p-card>
-    </div>
-
-    <!-- Open Science Metrics -->
-    <p-card styleClass="open-science-card">
-      <ng-template pTemplate="header">
-        <h3>Open Science Practices</h3>
-      </ng-template>
-      <div class="progress-bars">
-        <div class="progress-item">
-          <div class="progress-label">
-            <i class="pi pi-folder-open"></i>
-            <span>Open Data</span>
-            <span class="percentage">{{ metrics()!.openDataPercentage.toFixed(1) }}%</span>
-          </div>
-          <p-progressBar 
-            [value]="metrics()!.openDataPercentage"
-            styleClass="primary">
-          </p-progressBar>
-        </div>
-        <div class="progress-item">
-          <div class="progress-label">
-            <i class="pi pi-code"></i>
-            <span>Open Code</span>
-            <span class="percentage">{{ metrics()!.openCodePercentage.toFixed(1) }}%</span>
-          </div>
-          <p-progressBar 
-            [value]="metrics()!.openCodePercentage"
-            styleClass="accent">
-          </p-progressBar>
-        </div>
-        <div class="progress-item">
-          <div class="progress-label">
-            <i class="pi pi-check-circle"></i>
-            <span>Preregistered</span>
-            <span class="percentage">{{ metrics()!.preregisteredPercentage.toFixed(1) }}%</span>
-          </div>
-          <p-progressBar 
-            [value]="metrics()!.preregisteredPercentage"
-            styleClass="warn">
-          </p-progressBar>
+  <!-- Statistics Dashboard -->
+  <div class="stats-grid" *ngIf="metrics()">
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-database stat-icon"></i>
+        <div class="stat-info">
+          <div class="stat-value">{{ metrics()!.openDataPercentage.toFixed(1) }}%</div>
+          <div class="stat-label">Open Data</div>
         </div>
       </div>
     </p-card>
-  }
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-code stat-icon"></i>
+        <div class="stat-info">
+          <div class="stat-value">{{ metrics()!.openCodePercentage.toFixed(1) }}%</div>
+          <div class="stat-label">Open Code</div>
+        </div>
+      </div>
+    </p-card>
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-check-circle stat-icon"></i>
+        <div class="stat-info">
+          <div class="stat-value">{{ metrics()!.preregisteredPercentage.toFixed(1) }}%</div>
+          <div class="stat-label">Preregistered</div>
+        </div>
+      </div>
+    </p-card>
+  </div>
 
   <!-- Main Tabs -->
   <p-tabView>
     <!-- Studies Tab -->
-    <p-tabPanel>
-      <ng-template pTemplate="header">
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-book"></i>
-          <span>Studies</span>
-          <p-badge [value]="studies().length.toString()"></p-badge>
-        </div>
-      </ng-template>
-
+    <p-tabPanel header="Studies">
       <div class="tab-content">
-        <!-- Search and Filters -->
-        <div class="search-section">
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-search"></i>
-            <input 
-              pInputText 
-              [(ngModel)]="searchQuery" 
-              (keyup.enter)="searchStudies()" 
-              placeholder="Search studies (title, author, or keyword)"
-              class="w-full">
-          </span>
-            @if (searchQuery) {
-              <button 
-                pButton
-                icon="pi pi-times"
-                (click)="clearSearch()"
-                class="p-button-rounded p-button-text">
-              </button>
-            }
+        <!-- Filters -->
+        <p-card class="filters-card">
+          <div class="filters-section">
+            <p-multiSelect
+              [options]="fields"
+              [(ngModel)]="selectedFields"
+              defaultLabel="Research Field"
+              optionLabel="name"
+              class="filter-field">
+            </p-multiSelect>
+          </div>
+        </p-card>
 
-          <p-multiSelect
-            [options]="fields"
-            [(ngModel)]="selectedFields"
-            defaultLabel="Research Field"
-            optionLabel="name"
-            class="filter-field">
-          </p-multiSelect>
-
-          <p-button
-            icon="pi pi-search"
-            label="Search"
-            (onClick)="searchStudies()">
-          </p-button>
+        <!-- Studies Grid -->
+        <div class="studies-grid" *ngIf="studies().length > 0">
+          <p-card *ngFor="let study of studies()" class="study-card">
+            <div class="study-content">
+              <h3>{{ study.title }}</h3>
+              <p>{{ study.description }}</p>
+              <div class="study-meta">
+                <span class="status" [class]="'status-' + study.status">{{ study.status }}</span>
+                <span class="date">{{ formatDate(study.createdAt) }}</span>
+              </div>
+            </div>
+          </p-card>
         </div>
-
-        <!-- Loading State -->
-        @if (isLoading()) {
-          <div class="loading-state">
-            <p-progressSpinner styleClass="w-4rem h-4rem"></p-progressSpinner>
-            <p>Loading studies...</p>
-          </div>
-        }
-
-        <!-- Studies List -->
-        @if (!isLoading() && filteredStudies().length > 0) {
-          <div class="studies-list">
-            @for (study of filteredStudies(); track study.id) {
-              <p-card styleClass="study-card">
-                <div class="study-header">
-                  <div class="study-info">
-                    <h3>{{ study.title }}</h3>
-                    <p class="authors">{{ study.authors.join(', ') }} ({{ study.year }})</p>
-                    <p class="journal">{{ study.journal }}</p>
-                  </div>
-                  <div class="study-score">
-                    <div class="score-circle" [class]="getScoreClass(study.reproducibilityScore)">
-                      {{ study.reproducibilityScore }}
-                    </div>
-                    <span class="score-label">Reproducibility</span>
-                  </div>
-                </div>
-
-                <div class="study-content">
-                  <p class="abstract">{{ study.abstract }}</p>
-
-                  <!-- Study Meta -->
-                  <div class="study-meta">
-                    <div class="chip-container">
-                      <p-chip>
-                        <div class="flex align-items-center gap-2">
-                          <i class="pi pi-tag"></i>
-                          <span>{{ study.field }}</span>
-                        </div>
-                      </p-chip>
-                      <p-chip [styleClass]="getStatusClass(study.status)">
-                        <div class="flex align-items-center gap-2">
-                          <i [class]="'pi ' + getStatusIcon(study.status)"></i>
-                          <span>{{ study.status }}</span>
-                        </div>
-                      </p-chip>
-                      <p-chip>
-                        <div class="flex align-items-center gap-2">
-                          <i class="pi pi-users"></i>
-                          <span>n={{ study.sampleSize }}</span>
-                        </div>
-                      </p-chip>
-                      <p-chip>
-                        <div class="flex align-items-center gap-2">
-                          <i class="pi pi-copy"></i>
-                          <span>{{ study.replicationCount }} replications</span>
-                        </div>
-                      </p-chip>
-                    </div>
-                  </div>
-
-                  <!-- Badges -->
-                  @if (study.badges.length > 0) {
-                    <div class="badges">
-                      @for (badge of study.badges; track badge.type) {
-                        <p-badge 
-                          [styleClass]="getBadgeClass(badge.type)"
-                          [value]="badge.type"
-                          [severity]="getBadgeSeverity(badge.type)">
-                          <i [class]="'pi ' + getBadgeIcon(badge.type)"></i>
-                        </p-badge>
-                      }
-                    </div>
-                  }                  <!-- Open Science Indicators -->
-                  <div class="open-science-indicators">
-                    @if (study.dataAvailable) {
-                      <i class="pi pi-folder-open indicator success" pTooltip="Data Available"></i>
-                    }
-                    @if (study.codeAvailable) {
-                      <i class="pi pi-code indicator success" pTooltip="Code Available"></i>
-                    }
-                    @if (study.preregistered) {
-                      <i class="pi pi-check-circle indicator success" pTooltip="Preregistered"></i>
-                    }
-                    @if (study.openAccess) {
-                      <i class="pi pi-lock-open indicator success" pTooltip="Open Access"></i>
-                    }
-                  </div>
-                </div>
-
-                <ng-template pTemplate="footer">
-                  <div class="flex justify-content-between">
-                    <p-button
-                      icon="pi pi-eye"
-                      label="View Details"
-                      (onClick)="viewStudyDetails(study)"
-                      styleClass="p-button-text">
-                    </p-button>
-                    <p-button
-                      icon="pi pi-copy"
-                      label="View Replications"
-                      (onClick)="viewReplications(study)"
-                      styleClass="p-button-text">
-                    </p-button>
-                    <p-button
-                      icon="pi pi-share-alt"
-                      label="Validation Network"
-                      (onClick)="viewNetwork(study)">
-                    </p-button>
-                  </div>
-                </ng-template>
-              </p-card>
-            }
-          </div>
-        }
-
-        <!-- Empty State -->
-        @if (!isLoading() && filteredStudies().length === 0) {
-          <div class="empty-state">
-            <i class="pi pi-flask"></i>
-            <h3>No Studies Found</h3>
-            <p>Try adjusting your search or filters</p>
-          </div>
-        }
       </div>
     </p-tabPanel>
 
     <!-- Replications Tab -->
-    <p-tabPanel>
-      <ng-template pTemplate="header">
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-copy"></i>
-          <span>Replications</span>
-          <p-badge [value]="replications().length.toString()" severity="info"></p-badge>
-        </div>
-      </ng-template>
-
+    <p-tabPanel header="Replications">
       <div class="tab-content">
-        @if (isLoading()) {
-          <div class="loading-state">
-            <p-progressSpinner styleClass="w-4rem h-4rem"></p-progressSpinner>
-            <p>Loading replications...</p>
-          </div>
-        }
-
-        @if (!isLoading() && replications().length > 0) {
-          <div class="replications-list">
-            @for (replication of replications(); track replication.id) {
-              <p-card styleClass="replication-card">
-                <div class="replication-header">
-                  <div class="replication-info">
-                    <h3>Replication of: {{ replication.originalStudy.title }}</h3>
-                    <p class="team">{{ replication.replicatingTeam.join(', ') }}</p>
-                    <p class="institution">{{ replication.institution }}</p>
-                  </div>
-                  <div class="confidence-meter">
-                    <div class="confidence-value" [class]="getConfidenceClass(replication.confidence)">
-                      {{ replication.confidence }}%
-                    </div>
-                    <span class="confidence-label">Confidence</span>
-                  </div>
-                </div>
-
-                <div class="replication-content">
-                  <!-- Status and Outcome -->
-                  <div class="replication-meta">
-                    <div class="chip-container">
-                      <p-chip [styleClass]="getReplicationStatusClass(replication.status)">
-                        <div class="flex align-items-center gap-2">
-                          <i class="pi pi-clock"></i>
-                          <span>{{ replication.status }}</span>
-                        </div>
-                      </p-chip>
-                      <p-chip [styleClass]="getOutcomeClass(replication.outcome)">
-                        <div class="flex align-items-center gap-2">
-                          <i [class]="'pi ' + getOutcomeIcon(replication.outcome)"></i>
-                          <span>{{ replication.outcome }}</span>
-                        </div>
-                      </p-chip>
-                      <p-chip>
-                        <div class="flex align-items-center gap-2">
-                          <i class="pi pi-users"></i>
-                          <span>n={{ replication.sampleSize }}</span>
-                        </div>
-                      </p-chip>
-                    </div>
-                  </div>
-
-                  <!-- Effect Size Comparison -->
-                  <div class="effect-size-comparison">
-                    <h4>Effect Size Comparison</h4>
-                    <div class="comparison-bars">
-                      <div class="comparison-item">
-                        <span class="label">Original:</span>
-                        <div class="bar-container">
-                          <div class="bar original" [style.width.%]="replication.effectSizeComparison.original * 50"></div>
-                          <span class="value">{{ replication.effectSizeComparison.original.toFixed(2) }}</span>
-                        </div>
-                      </div>
-                      <div class="comparison-item">
-                        <span class="label">Replication:</span>
-                        <div class="bar-container">
-                          <div class="bar replication" [style.width.%]="replication.effectSizeComparison.replication * 50"></div>
-                          <span class="value">{{ replication.effectSizeComparison.replication.toFixed(2) }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="difference">
-                      Difference: {{ replication.effectSizeComparison.percentageDifference.toFixed(1) }}%
-                      @if (replication.effectSizeComparison.withinCI) {
-                        <span class="ci-badge success">Within CI</span>
-                      } @else {
-                        <span class="ci-badge warning">Outside CI</span>
-                      }
-                    </p>
-                  </div>
-
-                  <!-- Findings -->
-                  @if (replication.findings.length > 0) {
-                    <div class="findings">
-                      <h4>Key Findings</h4>
-                      <ul>
-                        @for (finding of replication.findings; track $index) {
-                          <li>{{ finding }}</li>
-                        }
-                      </ul>
-                    </div>
-                  }
-
-                  <!-- Deviations -->
-                  @if (replication.deviations.length > 0) {
-                    <div class="deviations">
-                      <h4>
-                        <i class="pi pi-exclamation-triangle"></i>
-                        Protocol Deviations
-                      </h4>
-                      <ul>
-                        @for (deviation of replication.deviations; track $index) {
-                          <li>{{ deviation }}</li>
-                        }
-                      </ul>
-                    </div>
-                  }
-                </div>
-
-                <ng-template pTemplate="footer">
-                  <div class="flex flex-wrap gap-2">
-                    @if (replication.preregistrationUrl) {
-                      <p-button
-                        (onClick)="openUrl(replication.preregistrationUrl)"
-                        icon="pi pi-verified"
-                        label="Preregistration"
-                        styleClass="p-button-text">
-                      </p-button>
-                    }
-                    @if (replication.dataUrl) {
-                      <p-button
-                        (onClick)="openUrl(replication.dataUrl)"
-                        icon="pi pi-folder-open"
-                        label="Data"
-                        styleClass="p-button-text">
-                      </p-button>
-                    }
-                    @if (replication.codeUrl) {
-                      <p-button
-                        (onClick)="openUrl(replication.codeUrl)"
-                        icon="pi pi-code"
-                        label="Code"
-                        styleClass="p-button-text">
-                      </p-button>
-                    }
-                    @if (replication.reportUrl) {
-                      <p-button
-                        (onClick)="openUrl(replication.reportUrl)"
-                        icon="pi pi-file"
-                        label="Report">
-                      </p-button>
-                    }
-                  </div>
-                </ng-template>
-              </p-card>
-            }
-          </div>
-        }
-
-        @if (!isLoading() && replications().length === 0) {
-          <div class="empty-state">
-            <i class="pi pi-copy text-4xl"></i>
-            <h3>No Replications Yet</h3>
-            <p>Start tracking replication studies</p>
-          </div>
-        }
-      </div>
-    </p-tabPanel>
-
-    <!-- Analytics Tab -->
-    <p-tabPanel>
-      <ng-template pTemplate="header">
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-chart-line"></i>
-          <span>Analytics</span>
-        </div>
-      </ng-template>
-
-      <div class="tab-content">
-        @if (metrics()) {
-          <!-- By Field Analysis -->
-          <p-card styleClass="analytics-card">
-            <ng-template pTemplate="header">
-              <h3 class="text-xl font-bold m-0">Reproducibility by Research Field</h3>
-            </ng-template>
-            <div class="field-analysis">
-              @for (field of getFieldsWithData(); track field) {
-                <div class="field-item">
-                  <div class="field-header">
-                    <span class="field-name">{{ field }}</span>
-                    <span class="field-stats">
-                      {{ getFieldMetrics(field)!.totalStudies }} studies · 
-                      {{ getFieldMetrics(field)!.successRate.toFixed(1) }}% success rate
-                    </span>
-                  </div>
-                  <div class="field-bar">
-                    <div 
-                      class="field-bar-fill" 
-                      [style.width.%]="getFieldMetrics(field)!.averageScore"
-                      [class]="getScoreClass(getFieldMetrics(field)!.averageScore)">
-                    </div>
-                    <span class="field-score">{{ getFieldMetrics(field)!.averageScore.toFixed(1) }}%</span>
-                  </div>
-                </div>
-              }
+        <div class="replications-grid" *ngIf="replications().length > 0">
+          <p-card *ngFor="let replication of replications()" class="replication-card">
+            <div class="replication-content">
+              <h3>Replication of: {{ replication.originalStudy.title }}</h3>
+              <p class="team">{{ replication.replicatingTeam.join(', ') }}</p>
+              <p class="institution">{{ replication.institution }}</p>
+              <div class="replication-meta">
+                <span class="confidence" [class]="'confidence-' + replication.confidence">
+                  Confidence: {{ replication.confidence }}
+                </span>
+                <span class="status" [class]="'status-' + replication.status">{{ replication.status }}</span>
+              </div>
             </div>
           </p-card>
-
-          <!-- Trend Over Time -->
-          <p-card styleClass="analytics-card">
-            <ng-template pTemplate="header">
-              <h3 class="text-xl font-bold m-0">Replication Success Rate Trend</h3>
-            </ng-template>
-            <div class="trend-chart">
-              @for (trend of metrics()!.trendOverTime; track trend.year) {
-                <div class="trend-item">
-                  <div class="trend-year">{{ trend.year }}</div>
-                  <div class="trend-bar-container">
-                    <div 
-                      class="trend-bar" 
-                      [style.height.%]="trend.successRate"
-                      [class]="getScoreClass(trend.successRate)">
-                    </div>
-                  </div>
-                  <div class="trend-label">{{ trend.successRate.toFixed(1) }}%</div>
-                  <div class="trend-count">{{ trend.successfulReplications }}/{{ trend.totalStudies }}</div>
-                </div>
-              }
-            </div>
-          </p-card>
-        }
+        </div>
       </div>
     </p-tabPanel>
   </p-tabView>
