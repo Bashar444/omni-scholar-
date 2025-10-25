@@ -1,15 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist/omni-scholar-app/browser",
-        "buildCommand": "npm run build -- --configuration production"
-      }
-    }
-  ],
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
+  "outputDirectory": "dist/omni-scholar-app/browser",
   "rewrites": [
     { "source": "/api/:path*", "destination": "https://omnischolar.octopus.app/api/:path*" },
     { "source": "/:path*", "destination": "/index.html" }
