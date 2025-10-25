@@ -70,8 +70,8 @@ jobs:
     # Octopus Deploy steps
     - name: Create Release Package
       run: |
-        cd dist/omni-scholar-app/browser
-        zip -r ../../${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version }}.zip .
+        cd dist/omni-scholar-app
+        zip -r ../${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version }}.zip .
       
     - name: Install Octopus CLI
       uses: OctopusDeploy/install-octopus-cli-action@v1
