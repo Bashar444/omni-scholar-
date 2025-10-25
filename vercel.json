@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install --legacy-peer-deps --force && npx ng build --configuration production",
+  "buildCommand": "npm install --legacy-peer-deps --force && ./node_modules/.bin/ng build --configuration production",
   "outputDirectory": "dist/omni-scholar-app",
   "rewrites": [
     { "source": "/:path*", "destination": "/index.html" }
