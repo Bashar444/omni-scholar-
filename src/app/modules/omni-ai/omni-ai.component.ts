@@ -52,6 +52,7 @@ import { MarkdownToHtmlPipe } from './pipes/markdown-to-html.pipe';
     MenuModule,
     InputSwitchModule,
     InputNumberModule,
+    InputTextareaModule,
 
     // Custom Components / Pipes
     ChatMessageSkeletonComponent,

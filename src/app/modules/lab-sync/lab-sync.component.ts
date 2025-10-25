@@ -53,7 +53,7 @@ import {
     InputTextareaModule,
     InputNumberModule,
     DropdownModule,
-  MultiSelectModule,
+    MultiSelectModule,
     TabViewModule,
     BadgeModule,
     TooltipModule,
