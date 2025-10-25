@@ -45,6 +45,7 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     FormsModule,
     RouterModule,
+    PaperCardSkeletonComponent,
     // PrimeNG Modules
     ButtonModule,
     CardModule,

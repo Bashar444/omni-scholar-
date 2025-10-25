@@ -35,6 +35,7 @@ import { GrantService } from './services/grant.service';
 @Component({
   selector: 'app-grant-ai',
   standalone: true,
+  providers: [GrantService, MessageService, ConfirmationService],
   imports: [
     CommonModule,
     FormsModule,
