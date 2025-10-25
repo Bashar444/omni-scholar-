@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-name: Build and Deploy with Octopus
+name: Build and Deploy with Octopus and Vercel
 
 on:
   push:
