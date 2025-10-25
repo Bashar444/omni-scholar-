@@ -1,5 +1,5 @@
 ﻿// Angular Core
-import { Component, OnInit, inject, signal, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -35,7 +35,6 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-paper-pilot',
   standalone: true,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     PaperService,
     ExportService,
