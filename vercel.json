@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "chmod +x scripts/build.sh && ./scripts/build.sh || (chmod +x scripts/fallback-build.sh && ./scripts/fallback-build.sh)",
+  "buildCommand": "npm install @angular-devkit/build-angular@16.2.0 @angular/compiler-cli@16.2.0 typescript@5.1.3 --save-dev --legacy-peer-deps --force --no-audit && npx ng build --configuration production",
   "outputDirectory": "dist/omni-scholar-app",
   "installCommand": "npm install --legacy-peer-deps --force --no-audit --no-fund",
   "rewrites": [
