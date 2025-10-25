@@ -1,0 +1,3 @@
+# This file tells GitHub Pages to not process the site with Jekyll
+# Required when using files/folders with underscores (like SCSS partials)
+# Last updated: 2025-10-18 - Phase 5 deployment
