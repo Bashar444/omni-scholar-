@@ -5,11 +5,13 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/omni-scholar-app/browser"
+        "distDir": "dist/omni-scholar-app/browser",
+        "buildCommand": "npm run build -- --configuration production"
       }
     }
   ],
   "rewrites": [
+    { "source": "/api/:path*", "destination": "https://omnischolar.octopus.app/api/:path*" },
     { "source": "/:path*", "destination": "/index.html" }
   ],
   "headers": [
