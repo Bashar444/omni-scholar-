@@ -5,19 +5,84 @@
   padding: 1.5rem;
   height: 100%;
   background: var(--surface-ground);
+}
 
-  // Header
-  .header {
-    background: var(--primary-gradient, linear-gradient(135deg, var(--primary-color) 0%, var(--primary-600) 100%));
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    color: var(--primary-color-text);
-    box-shadow: var(--card-shadow);
+.header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-600) 100%);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  color: var(--primary-color-text);
+  box-shadow: var(--card-shadow);
+}
 
-    .header-content {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.info {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.graph-container {
+  flex: 1;
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  min-height: 600px;
+  position: relative;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.layout-controls,
+.filter-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.legend {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: var(--surface-overlay);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.color-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.node-details {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: var(--surface-overlay);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  max-width: 300px;
+}
 
       .header-icon {
         font-size: 4rem;

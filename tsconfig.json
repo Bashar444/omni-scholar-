@@ -12,6 +12,7 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
+    "composite": false,
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",

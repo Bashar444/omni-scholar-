@@ -1,0 +1,60 @@
+.paper-pilot-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--surface-ground);
+}
+
+.header-card {
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+}
+
+.upload-card {
+  background: var(--surface-section);
+  transition: background-color 0.2s;
+}
+
+.upload-card.dragging {
+  background: var(--surface-hover);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.papers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.paper-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  transition: all 0.2s;
+}
+
+.paper-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow);
+}
+
+.paper-card.selected {
+  border-color: var(--primary-color);
+}
+
+.paper-card.processing {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

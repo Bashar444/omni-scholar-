@@ -84,8 +84,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'omni-ai',
-			loadComponent: () => import('./modules/omni-ai/omni-ai.component').then(c => c.OmniAiComponent),
-			canActivate: [authGuard]
+			loadComponent: () => import('./modules/omni-ai/omni-ai.component').then(c => c.OmniAiComponent)
 	},
 	{
 		path: '**',

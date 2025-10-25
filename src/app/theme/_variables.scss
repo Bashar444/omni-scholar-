@@ -18,6 +18,25 @@ $clr-gray-900: #111827;
 
 // Semantic Roles
 $primary: $clr-blue;
+$card: $clr-gray-100;
+
+// Gradients
+$gradient-accent: linear-gradient(135deg, $clr-blue, $clr-blue-dark);
+
+// Typography
+$font-family-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$font-weight-bold: 600;
+
+// Spacing
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+
+// Borders & Shadows
+$radius-sm: 4px;
+
+// Animation
+$transition-fast: 0.2s ease-in-out;
 $accent: $clr-orange;
 $success: $clr-green;
 $warning: $clr-orange;

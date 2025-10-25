@@ -15,18 +15,19 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular/build:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/omni-scholar-app/browser",
-            "baseHref": "/omn/",
-            "browser": "src/main.ts",
+            "outputPath": "dist/omni-scholar-app",
+            "baseHref": "/",
+            "main": "src/main.ts",
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "/"
               },
               "src/assets",
               {

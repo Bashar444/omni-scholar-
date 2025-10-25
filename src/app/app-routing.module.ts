@@ -1,10 +1,7 @@
+import { Routes } from '@angular/router';
 import { SampleDashboardComponent } from './theme/sample-dashboard.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: 'clarity-dashboard', component: SampleDashboardComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'home', component: HomeComponent },
-  { path: '', component: HomeComponent },
+  { path: '', redirectTo: 'clarity-dashboard', pathMatch: 'full' }
 ];
-
-export const appRoutes = RouterModule.forRoot(routes);

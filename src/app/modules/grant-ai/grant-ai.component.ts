@@ -56,7 +56,6 @@ import { GrantService } from './services/grant.service';
     ConfirmDialogModule,
     AccordionModule
   ],
-  providers: [MessageService, ConfirmationService],
   templateUrl: './grant-ai.component.html',
   styleUrls: ['./grant-ai.component.scss']
 })

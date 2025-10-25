@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm install --legacy-peer-deps && npm run build",
-  "outputDirectory": "dist/omni-scholar-app/browser",
+  "buildCommand": "npm install --legacy-peer-deps && npm run vercel-build",
+  "outputDirectory": "dist/omni-scholar-app",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://omnischolar.octopus.app/api/:path*" },
     { "source": "/:path*", "destination": "/index.html" }
   ],
   "headers": [

@@ -41,6 +41,7 @@ import { MessageService } from 'primeng/api';
     DataExportImportService,
     MessageService
   ],
+  styleUrls: ['./paper-pilot.component.scss'],
   imports: [
     CommonModule,
     FormsModule,

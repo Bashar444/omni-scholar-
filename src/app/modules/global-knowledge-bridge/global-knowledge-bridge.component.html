@@ -11,7 +11,8 @@
       </div>
       <div class="language-selector">
         <p-dropdown 
-          [(ngModel)]="selectedUserLanguage()" 
+          [ngModel]="selectedUserLanguage()"
+          (ngModelChange)="selectedUserLanguage.set($event)"
           [options]="supportedLanguages" 
           optionLabel="name" 
           optionValue="code"

@@ -194,7 +194,10 @@ export class GlobalKnowledgeBridgeComponent implements OnInit {
 
   clearSearch(): void {
     this.searchQuery.set('');
-    this.searchPapers();
+    this.selectedLanguages.set([]);
+    this.selectedFields.set([]);
+    this.selectedRegions.set([]);
+    this.loadData();
   }
 
   searchPapers(): void {
@@ -208,14 +211,6 @@ export class GlobalKnowledgeBridgeComponent implements OnInit {
     this.translationService.searchPapers(filters).subscribe(results => {
       this.papers.set(results);
     });
-  }
-
-  clearSearch(): void {
-    this.searchQuery.set('');
-    this.selectedLanguages.set([]);
-    this.selectedFields.set([]);
-    this.selectedRegions.set([]);
-    this.loadData();
   }
 
   // Paper actions
