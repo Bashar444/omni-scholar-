@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "root": ".",
   "buildCommand": "ng build --configuration production",
   "outputDirectory": "dist/omni-scholar-app",
   "installCommand": "npm install --legacy-peer-deps --force --no-audit --no-fund",
