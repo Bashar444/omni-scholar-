@@ -69,13 +69,16 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "omni-scholar-app:build"
+          },
           "configurations": {
             "production": {
-              "buildTarget": "omni-scholar-app:build:production"
+              "browserTarget": "omni-scholar-app:build:production"
             },
             "development": {
-              "buildTarget": "omni-scholar-app:build:development"
+              "browserTarget": "omni-scholar-app:build:development"
             }
           },
           "defaultConfiguration": "development"
