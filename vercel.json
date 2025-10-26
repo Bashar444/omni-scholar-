@@ -1,7 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm install --legacy-peer-deps --force --no-audit --no-fund && npm run vercel-build",
+  "buildCommand": "ng build --configuration production",
   "outputDirectory": "dist/omni-scholar-app",
+  "installCommand": "npm install --legacy-peer-deps --force --no-audit --no-fund",
   "rewrites": [
     { "source": "/:path*", "destination": "/index.html" }
   ],
