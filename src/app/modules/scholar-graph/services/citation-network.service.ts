@@ -21,6 +21,17 @@ export class CitationNetworkService {
   }
 
   /**
+   * Generate a browser-compatible UUID
+   */
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  /**
    * Get all saved citation networks
    */
   getAllNetworks(): CitationNetwork[] {
@@ -49,7 +60,7 @@ export class CitationNetworkService {
    */
   createNetwork(network: Partial<CitationNetwork>): Observable<CitationNetwork> {
     const newNetwork: CitationNetwork = {
-      id: crypto.randomUUID(),
+      id: this.generateUUID(),
       name: network.name || 'Untitled Network',
       description: network.description || '',
       createdAt: new Date(),
@@ -165,7 +176,7 @@ export class CitationNetworkService {
       .map(key => links.find(l => `${l.source}-${l.target}` === key)!);
 
     const network: CitationNetwork = {
-      id: crypto.randomUUID(),
+      id: this.generateUUID(),
       name: `Citations for "${centerPaper.title}"`,
       description: `Citation network with depth ${depth} centered on ${centerPaper.title}`,
       createdAt: new Date(),
