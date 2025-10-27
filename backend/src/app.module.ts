@@ -12,6 +12,7 @@ import { UsersModule } from './modules/users/users.module';
 import { HealthModule } from './modules/health/health.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Paper } from './modules/papers/entities/paper.entity';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { AppService } from './app.service';
         username: configService.get('DB_USERNAME', 'scholar'),
         password: configService.get('DB_PASSWORD', 'scholar_pass'),
         database: configService.get('DB_NAME', 'omni_scholar'),
-        entities: [__dirname + '/modules/**/entities/*.entity{.ts,.js}'],
+        entities: [Paper],
         migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') !== 'production',
