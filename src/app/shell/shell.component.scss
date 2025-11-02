@@ -4,12 +4,13 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  background: #f5f5f5;
 }
 
 .p-sidebar.sidenav {
   width: 280px !important;
-  background: var(--omni-surface);
-  border-right: 1px solid var(--omni-border);
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0;
@@ -17,15 +18,15 @@
 }
 
 .sidenav-header {
-  padding: var(--spacing-lg);
-  background: linear-gradient(135deg, var(--omni-primary) 0%, var(--omni-primary-dark) 100%);
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
   color: white;
 
   .logo-container {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-xs);
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
 
     .logo-icon {
       font-size: 32px;
@@ -50,33 +51,34 @@
 
 /* Navigation List */
 .nav-list {
-  padding: var(--spacing-md) 0;
+  padding: 1rem 0;
   padding-bottom: 100px; // Prevent footer overlap
 
   .nav-item {
-    margin: var(--spacing-xs) var(--spacing-sm);
+    margin: 0.25rem 0.5rem;
     border-radius: 8px;
-    transition: all var(--transition-normal);
+    transition: all 300ms ease;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 0.5rem;
     padding: 10px 14px;
-    color: var(--omni-text-primary);
+    color: #424242;
+    text-decoration: none;
 
     &:hover {
-      background: var(--omni-hover);
+      background: #f0f0f0;
     }
 
     &.active {
-      background: var(--omni-primary-light);
-      color: var(--omni-primary-dark);
+      background: #bbdefb;
+      color: #1976D2;
       font-weight: 600;
     }
 
     .nav-icon {
-      color: var(--omni-text-secondary);
-      margin-right: var(--spacing-sm);
+      color: #757575;
+      margin-right: 0.5rem;
       flex-shrink: 0;
       font-size: 22px;
     }
@@ -95,30 +97,30 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: var(--spacing-md);
-  background: var(--omni-surface);
+  padding: 1rem;
+  background: #ffffff;
 
   .user-info {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm);
+    gap: 0.5rem;
+    padding: 0.5rem;
     border-radius: 8px;
-    background: var(--omni-background);
+    background: #f5f5f5;
 
     i {
-      color: var(--omni-primary);
+      color: #2196F3;
     }
 
     span {
       font-size: 14px;
       font-weight: 500;
-      color: var(--omni-text-primary);
+      color: #424242;
     }
   }
 
   .auth-cta {
-    margin-top: var(--spacing-md);
+    margin-top: 1rem;
     text-align: center;
 
     ::ng-deep .p-button {
@@ -130,9 +132,9 @@
 
 /* Toolbar */
 .p-toolbar.app-toolbar {
-  background: var(--omni-primary);
+  background: #2196F3;
   color: #fff;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   padding: 0.5rem 1rem;
   border: none;
   z-index: 10;
@@ -142,7 +144,7 @@
   .p-toolbar-group-center {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 0.5rem;
   }
 
   .search-container {
@@ -150,18 +152,18 @@
     align-items: center;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 24px;
-    padding: var(--spacing-xs) var(--spacing-md);
+    padding: 0.25rem 1rem;
     width: 400px;
-    transition: all var(--transition-normal);
+    transition: all 300ms ease;
 
     &:focus-within {
       background: rgba(255, 255, 255, 0.25);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
     .search-icon {
       color: rgba(255, 255, 255, 0.7);
-      margin-right: var(--spacing-sm);
+      margin-right: 0.5rem;
     }
 
     .search-input {
@@ -189,35 +191,35 @@
 
 /* Notifications panel */
 .notification-header {
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: 1rem 1.5rem;
 
   h3 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
-    color: var(--omni-text-primary);
+    color: #424242;
   }
 }
 
 .notification-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: 6px;
   transition: background 0.2s ease;
 
   &:hover {
-    background: var(--omni-hover);
+    background: #f0f0f0;
   }
 
   i {
-    color: var(--omni-primary);
+    color: #2196F3;
   }
 
   span {
-    color: var(--omni-text-primary);
+    color: #424242;
     font-size: 14px;
   }
 }
@@ -226,8 +228,8 @@
 .content-container {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-lg);
-  background: var(--omni-background);
+  padding: 1.5rem;
+  background: #f5f5f5;
   width: 100%;
   min-height: 100%;
   display: flex;
