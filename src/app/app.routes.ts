@@ -8,8 +8,12 @@ import { routeGuard } from './core/guards/route.guard';
 export const routes: Routes = [
 	{
 		path: '',
-		redirectTo: '/scholar-graph',
+		redirectTo: '/dashboard',
 		pathMatch: 'full'
+	},
+	{
+		path: 'dashboard',
+		loadComponent: () => import('./modules/dashboard/dashboard.component').then(c => c.DashboardComponent)
 	},
 	{
 		path: 'auth',
