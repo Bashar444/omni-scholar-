@@ -1,9 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../core/services/auth.service';
-
 
 @Component({
   selector: 'app-shell',
@@ -15,10 +12,4 @@ import { AuthService } from '../core/services/auth.service';
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss']
 })
-export class ShellComponent implements OnInit {
-  constructor(public authService: AuthService, public router: Router) {}
-
-  ngOnInit(): void {
-    console.log('Shell component initialized successfully');
-  }
-}
+export class ShellComponent {}
