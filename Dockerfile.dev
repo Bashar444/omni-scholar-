@@ -7,8 +7,11 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+# Install dependencies with verbose output
+RUN npm install --legacy-peer-deps --verbose
+
+# Verify Angular CLI is installed
+RUN npm list -g @angular/cli || npm install -g @angular/cli
 
 # Copy all files
 COPY . .

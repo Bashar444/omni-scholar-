@@ -1,6 +1,4 @@
 # Docker Compose for OmniScholar Development
-version: '3.8'
-
 services:
   omni-scholar:
     build:
