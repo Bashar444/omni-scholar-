@@ -5,7 +5,7 @@ import { ShellComponent } from './shell/shell.component';
   selector: 'app-root',
   standalone: true,
   imports: [ShellComponent],
-  template: '<app-shell></app-shell>',
+  template: '<app-shell ngSkipHydration></app-shell>',
   styleUrls: ['./app.scss']
 })
 export class App {
