@@ -35,19 +35,6 @@ interface Tool {
     MatProgressBarModule,
     MatBadgeModule,
   ],
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-      height: 100%;
-      background-color: #f5f5f5;
-    }
-    .dashboard-container {
-      padding: 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-  `],
   template: `
     <div class="dashboard-container">
       <!-- Header -->
