@@ -4,6 +4,7 @@ import { provideEffects } from '@ngrx/effects';
 import { scholarGraphFeatureKey, scholarGraphReducer } from './modules/scholar-graph/state/scholar-graph.reducer';
 import { ScholarGraphEffects } from './modules/scholar-graph/state/scholar-graph.effects';
 import { routeGuard } from './core/guards/route.guard';
+import { DashboardComponent } from './modules/dashboard/dashboard.component';
 
 export const routes: Routes = [
 	{
@@ -13,7 +14,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'dashboard',
-		loadComponent: () => import('./modules/dashboard/dashboard.component').then(c => c.DashboardComponent)
+		component: DashboardComponent
 	},
 	{
 		path: 'auth',

@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -51,8 +51,16 @@ interface NavigationModule {
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss']
 })
-export class ShellComponent {
+export class ShellComponent implements OnInit {
   sidenavOpened = signal(true);
+
+  ngOnInit(): void {
+    try {
+      console.log('Shell component initialized successfully');
+    } catch (error) {
+      console.error('Error initializing shell component:', error);
+    }
+  }
 
   modules: NavigationModule[] = [
     { id: 'scholar-graph', name: 'ScholarGraph', icon: 'pi pi-search', route: '/scholar-graph', description: 'AI-powered research discovery' },
