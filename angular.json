@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "omni-scholar-app:build:production"
+              "browserTarget": "omni-scholar-app:build:production"
             },
             "development": {
-              "buildTarget": "omni-scholar-app:build:development"
+              "browserTarget": "omni-scholar-app:build:development"
             }
           },
           "defaultConfiguration": "development"
