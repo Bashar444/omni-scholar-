@@ -28,7 +28,6 @@ import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
-
 import { AvatarModule } from 'primeng/avatar';
 import { RatingModule } from 'primeng/rating';
 import { DividerModule } from 'primeng/divider';
@@ -54,7 +53,6 @@ import { TagModule } from 'primeng/tag';
     BadgeModule,
     TooltipModule,
     MultiSelectModule,
-    InputGroupModule,
     AvatarModule,
     RatingModule,
     DividerModule,
