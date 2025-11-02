@@ -228,6 +228,10 @@
   overflow-y: auto;
   padding: var(--spacing-lg);
   background: var(--omni-background);
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Responsive */
