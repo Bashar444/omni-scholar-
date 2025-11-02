@@ -1,4 +1,4 @@
-import { Component, signal, computed, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, signal, computed, ViewChild, ElementRef, AfterViewChecked, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -24,9 +24,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 
 import { AiService } from './services/ai.service';
 import { DataExportImportService } from '../../shared/services/data-export-import.service';
-import { ChatMessageSkeletonComponent } from '../../shared/components/chat-message-skeleton/chat-message-skeleton.component';
 import { ChatMessage, ChatSession, AITool, AISettings } from './models/chat.model';
-import { MarkdownToHtmlPipe } from './pipes/markdown-to-html.pipe';
 
 @Component({
   selector: 'app-omni-ai',
@@ -52,11 +50,7 @@ import { MarkdownToHtmlPipe } from './pipes/markdown-to-html.pipe';
     MenuModule,
     InputSwitchModule,
     InputNumberModule,
-    InputTextareaModule,
-
-    // Custom Components / Pipes
-    ChatMessageSkeletonComponent,
-    MarkdownToHtmlPipe
+    InputTextareaModule
   ],
   providers: [MessageService],
   templateUrl: './omni-ai.component.html',
@@ -65,10 +59,11 @@ import { MarkdownToHtmlPipe } from './pipes/markdown-to-html.pipe';
 export class OmniAiComponent implements AfterViewChecked {
   @ViewChild('chatContainer') private chatContainer?: ElementRef;
 
-  private aiService = new AiService();
-  private dataExportImportService = new DataExportImportService();
+  private aiService = inject(AiService);
+  private dataExportImportService = inject(DataExportImportService);
+  private messageService = inject(MessageService);
 
-  constructor(private messageService: MessageService) {
+  constructor() {
     this.loadInitialData();
   }
 
