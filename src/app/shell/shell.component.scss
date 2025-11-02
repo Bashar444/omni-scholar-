@@ -7,6 +7,19 @@
   background: #f5f5f5;
 }
 
+.app-header {
+  background: #2196F3;
+  color: white;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+}
+
 .p-sidebar.sidenav {
   width: 280px !important;
   background: #ffffff;
