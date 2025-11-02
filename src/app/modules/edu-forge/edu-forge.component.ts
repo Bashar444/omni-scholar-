@@ -54,6 +54,7 @@ import { TagModule } from 'primeng/tag';
     BadgeModule,
     TooltipModule,
     MultiSelectModule,
+    InputGroupModule,
     AvatarModule,
     RatingModule,
     DividerModule,
