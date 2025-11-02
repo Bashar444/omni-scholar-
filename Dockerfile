@@ -15,7 +15,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy built app to nginx
-COPY --from=builder /app/dist/omni-scholar-app/browser /usr/share/nginx/html
+COPY --from=builder /app/dist/omni-scholar-app /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
