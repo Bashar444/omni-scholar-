@@ -192,15 +192,20 @@ interface Tool {
   styles: [`
     .dashboard-container {
       padding: 2rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
+      background: #ffffff;
+      min-height: 100%;
+      width: 100%;
     }
 
     .dashboard-header {
       text-align: center;
-      color: white;
+      color: #333;
       margin-bottom: 3rem;
       animation: slideDown 0.6s ease-out;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      color: white;
     }
 
     .dashboard-header h1 {
@@ -255,10 +260,10 @@ interface Tool {
     }
 
     .tools-section h2 {
-      color: white;
+      color: #333;
       font-size: 1.8rem;
       margin-bottom: 1.5rem;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      text-shadow: none;
     }
 
     .tools-grid {
@@ -405,10 +410,10 @@ interface Tool {
     }
 
     .quick-links-section h2 {
-      color: white;
+      color: #333;
       font-size: 1.8rem;
       margin-bottom: 1.5rem;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      text-shadow: none;
     }
 
     .links-grid {
@@ -445,7 +450,7 @@ interface Tool {
 
     .dashboard-footer {
       text-align: center;
-      color: white;
+      color: #666;
       padding: 2rem;
       border-top: 1px solid rgba(255,255,255,0.2);
       margin-top: 3rem;
