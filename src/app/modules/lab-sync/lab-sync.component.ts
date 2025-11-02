@@ -1,9 +1,8 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TeamService } from './services/team.service';
 import { DataExportImportService } from '../../shared/services/data-export-import.service';
-import { TaskItemSkeletonComponent } from '../../shared/components/task-item-skeleton/task-item-skeleton.component';
 
 // ✅ PrimeNG UI modules
 import { CardModule } from 'primeng/card';
@@ -62,19 +61,16 @@ import {
     ProgressBarModule,
     CalendarModule,
     MenuModule,
-    ToastModule,
-
-    // Shared components
-    TaskItemSkeletonComponent
+    ToastModule
   ],
   providers: [MessageService],
   templateUrl: './lab-sync.component.html',
   styleUrls: ['./lab-sync.component.scss']
 })
 export class LabSyncComponent {
-  private teamService = new TeamService();
-  private dataExportImportService = new DataExportImportService();
-  private messageService = new MessageService();
+  private teamService = inject(TeamService);
+  private dataExportImportService = inject(DataExportImportService);
+  private messageService = inject(MessageService);
 
   // ===== State =====
   currentTeam = signal<Team | null>(null);
